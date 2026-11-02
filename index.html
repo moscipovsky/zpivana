@@ -107,7 +107,13 @@ ol.set{padding-left:24px}ol.set li{padding:6px 0;border-bottom:1px solid var(--l
 <h2>Písničky podle abecedy</h2>
 <div class="panel" id="songDetail" hidden></div>
 <div class="panel" id="songList"></div>
-
+<h2>Navrhni další písničku</h2>
+<div class="panel">
+<label for="cName">Jméno (nepovinné)</label><input type="text" id="cName">
+<label for="cSong">Písnička a interpret</label><input type="text" id="cSong">
+<label for="cMsg">Poznámka</label><textarea id="cMsg" style="font-family:inherit"></textarea>
+<p><button class="btn" id="cSend">Odeslat návrh</button></p>
+</div>
 </section>
 
 <section class="view" id="setlist">
