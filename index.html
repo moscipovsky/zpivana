@@ -249,10 +249,11 @@ var polls=store.get("polls3",[
 var myPoll=store.get("myPoll2",{});
 var API_URL="https://script.google.com/macros/s/AKfycbyHQa2dTHbODYNbj9tEZp6zunHxf5roQl-XmmGtfYqXlsVM6lYrNIa23VzdtcsnNV1JXg/exec"; /* sem vlož adresu webové aplikace z Google Apps Script (viz návod); prázdné = hlasy se ukládají jen v tomto prohlížeči */
 var DEV=store.get("dev",null);if(!DEV){DEV=Math.random().toString(36).slice(2)+Date.now().toString(36);store.set("dev",DEV)}
-var shared={votes:{},tools:{}};
+var shared={votes:{},tools:{}},syncOk=null;
 function api(p){if(!API_URL)return Promise.resolve(null);var q=Object.keys(p).map(function(k){return k+"="+encodeURIComponent(p[k])}).join("&");
 return fetch(API_URL+"?"+q+"&_="+Date.now()).then(function(r){return r.json()}).catch(function(){return null})}
-function sync(){return api({action:"stats"}).then(function(d){if(d&&d.votes){shared=d;renderSongs();renderEvent();renderAdmin()}})}
+function sync(){return api({action:"stats"}).then(function(d){if(d&&d.votes){shared=d;syncOk=true;renderSongs();renderEvent();renderAdmin()}else if(API_URL){syncOk=false;renderAdmin()}})}
+function statusHtml(){var t=!API_URL?"Sdílené hlasy nejsou zapnuté (API_URL je prázdné), počítá se jen v tomto prohlížeči.":syncOk===false?"⚠ Nepodařilo se spojit s Google Tabulkou, hlasy se teď počítají jen v tomto prohlížeči. Zkontroluj adresu a nastavení nasazení.":syncOk?"✓ Připojeno ke Google Tabulce.":"Připojuji…";return'<p class="note">'+t+'</p>'}
 function toolCount(id){return API_URL?Math.max(shared.tools[id]||0,tools[id]?1:0):(tools[id]?1:0)}
 function ror(x,n){return(x>>>n)|(x<<(32-n))}
 function sha256(m){var K=[0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2],
@@ -274,7 +275,7 @@ $("#lGo").onclick=login;$("#lPass").onkeydown=$("#lUser").onkeydown=function(e){
 $("#lOut").onclick=function(){authed=false;try{sessionStorage.removeItem("adm")}catch(e){}go("home")};
 $("#adSync").onclick=function(){sync().then(function(){toast(API_URL?"Hlasy obnoveny":"Sdílené hlasy nejsou zapnuté")})};
 if(API_URL)setInterval(sync,30000);
-function renderAdVotes(){var col=new Intl.Collator("cs");$("#adVotes").innerHTML=songs.slice().sort(function(a,b){return votes(b)-votes(a)||col.compare(a.t,b.t)}).map(function(s){return'<div class="opt" style="cursor:default;display:flex;justify-content:space-between;gap:10px"><span>'+esc(s.t)+'</span><b>👍 '+votes(s)+'</b></div>'}).join("")}
+function renderAdVotes(){var col=new Intl.Collator("cs");$("#adVotes").innerHTML=statusHtml()+songs.slice().sort(function(a,b){return votes(b)-votes(a)||col.compare(a.t,b.t)}).map(function(s){return'<div class="opt" style="cursor:default;display:flex;justify-content:space-between;gap:10px"><span>'+esc(s.t)+'</span><b>👍 '+votes(s)+'</b></div>'}).join("")}
 
 function toast(m){var t=$("#toast");t.textContent=m;t.className="toast on";setTimeout(function(){t.className="toast"},2200)}
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
