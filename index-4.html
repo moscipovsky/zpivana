@@ -247,7 +247,7 @@ function cur(){return events.filter(function(e){return e.id===curId})[0]||events
 var polls=store.get("polls3",[
 {q:"Jak se ti líbilo minule?",o:["😄","😐","🙁"],v:[8,3,0]}]);
 var myPoll=store.get("myPoll2",{});
-var API_URL=""; /* sem vlož adresu webové aplikace z Google Apps Script (viz návod); prázdné = hlasy se ukládají jen v tomto prohlížeči */
+var API_URL="https://script.google.com/macros/s/AKfycbxz_DFusdNnJIfz__Qixtjxa6_SZaYppiPLpXo6GaCkA0ES6nzRChIbKUzA7p3SKhIXrw/exec"; /* sem vlož adresu webové aplikace z Google Apps Script (viz návod); prázdné = hlasy se ukládají jen v tomto prohlížeči */
 var DEV=store.get("dev",null);if(!DEV){DEV=Math.random().toString(36).slice(2)+Date.now().toString(36);store.set("dev",DEV)}
 var shared={votes:{},tools:{}};
 function api(p){if(!API_URL)return Promise.resolve(null);var q=Object.keys(p).map(function(k){return k+"="+encodeURIComponent(p[k])}).join("&");
