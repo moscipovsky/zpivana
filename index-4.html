@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Zpívaná</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Source+Serif+4:wght@400;600&display=swap">
+<style>
+:root{--bg:#f1efe6;--surf:#fbfaf5;--ink:#1d2b24;--mut:#5d6b63;--line:#d3d0c0;--green:#24493a;--onGreen:#f1efe6;--amber:#d98a1c;--amberSoft:#f6e2bb;--chord:#a4440f;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#121a16;--surf:#1a2520;--ink:#ece9dc;--mut:#9aa89f;--line:#33423a;--green:#2f5f4b;--onGreen:#f1efe6;--amberSoft:#3a2c12;--chord:#f0a35a}}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.55 "Source Serif 4",Georgia,serif}
+h1,h2,h3,.ui,button,label,select,input,textarea{font-family:"Bricolage Grotesque",system-ui,sans-serif}
+header{background:var(--green);color:var(--onGreen);position:sticky;top:env(safe-area-inset-top,0px);z-index:5}
+.bar{max-width:880px;margin:auto;display:flex;align-items:center;gap:8px;padding:20px 16px;flex-wrap:wrap}
+.logo{font:800 38px "Bricolage Grotesque",sans-serif;letter-spacing:-.02em;margin-right:auto;cursor:pointer;background:none;border:0;color:inherit;padding:0}
+nav button{background:none;border:0;color:inherit;font:600 19px "Bricolage Grotesque",sans-serif;padding:10px 14px;border-radius:10px;cursor:pointer;opacity:.8}
+nav button[aria-current="true"]{background:rgba(255,255,255,.16);opacity:1}
+main{max-width:880px;margin:auto;padding:20px 16px 60px}
+h1{font-size:clamp(34px,7vw,56px);line-height:1.02;margin:8px 0 14px;font-weight:800;letter-spacing:-.02em}
+h2{font-size:24px;margin:30px 0 10px}h3{margin:0 0 6px;font-size:18px}
+.view{display:none}.view.on{display:block}
+.panel{background:var(--surf);border:1px solid var(--line);border-radius:14px;padding:18px;margin:14px 0}
+.event{background:var(--amberSoft);border-color:var(--amber)}
+.event .when{font:700 26px "Bricolage Grotesque",sans-serif}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:620px){.split{grid-template-columns:1fr}}
+.door{display:block;text-align:left;width:100%;background:var(--green);color:var(--onGreen);border:0;border-radius:14px;padding:22px;cursor:pointer}
+.door.alt{background:var(--surf);color:var(--ink);border:2px solid var(--green)}
+.door b{display:block;font:800 26px "Bricolage Grotesque",sans-serif}
+.door span{font-size:15px;opacity:.85}
+button.btn{background:var(--green);color:var(--onGreen);border:0;border-radius:10px;padding:10px 16px;font-size:15px;font-weight:700;cursor:pointer}
+button.ghost{background:none;color:var(--ink);border:1px solid var(--line)}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible,.door:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+label{display:block;font-size:14px;font-weight:600;margin:10px 0 4px}
+input[type=text],input[type=password],input[type=number],select,textarea{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font-size:16px}
+textarea{min-height:90px;font-family:ui-monospace,Menlo,monospace}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+.chk{display:flex;gap:10px;align-items:center;font:500 16px "Bricolage Grotesque",sans-serif;margin:8px 0}
+.chk input{width:22px;height:22px;accent-color:var(--green)}
+.song{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.song .t{flex:1;cursor:pointer}.song .t b{font:700 18px "Bricolage Grotesque",sans-serif;display:block}
+.meta{font-size:14px;color:var(--mut)}
+.tag{display:inline-block;background:var(--amberSoft);border-radius:20px;padding:1px 10px;font:500 13px "Bricolage Grotesque",sans-serif;margin-right:4px;color:var(--ink)}
+.thumb{min-width:64px;border:1px solid var(--line);background:var(--surf);color:var(--ink);border-radius:30px;padding:8px 12px;font:700 15px "Bricolage Grotesque",sans-serif;cursor:pointer}
+.thumb[aria-pressed="true"]{background:var(--amber);border-color:var(--amber);color:#201400}
+pre.ch{font:15px/1.7 ui-monospace,Menlo,monospace;background:var(--bg);padding:14px;border-radius:10px;overflow-x:auto;white-space:pre-wrap}
+.ch i{font-style:normal;color:var(--chord);font-weight:700}
+ol.set{padding-left:24px}ol.set li{padding:6px 0;border-bottom:1px solid var(--line)}
+.qrbox{display:flex;gap:16px;align-items:center;flex-wrap:wrap}
+.qrbox svg{width:140px;height:140px;background:#fff;padding:6px;border-radius:8px}
+.opt{display:block;border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin:6px 0;background:var(--bg);cursor:pointer}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:10px 18px;border-radius:30px;font:600 15px "Bricolage Grotesque",sans-serif;opacity:0;pointer-events:none;transition:opacity .2s;z-index:20}
+.toast.on{opacity:1}
+.note{font-size:14px;color:var(--mut)}
+.cta{background:var(--green);color:var(--onGreen);border-radius:18px;padding:24px;margin:20px 0}.cta h2{margin:0 0 6px;font-size:30px}.cta p{margin:0 0 16px;opacity:.92}
+.songgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px}@media(max-width:620px){.songgrid{grid-template-columns:1fr}}
+.songbtn{display:flex;align-items:center;justify-content:space-between;gap:10px;background:rgba(255,255,255,.12);color:inherit;border:1px solid rgba(255,255,255,.35);border-radius:12px;padding:14px 16px;font:700 17px "Bricolage Grotesque",system-ui,sans-serif;cursor:pointer;text-align:left}.songbtn:hover{background:rgba(255,255,255,.24)}.songbtn small{font-weight:500;opacity:.85}
+.bigbtn{display:block;width:100%;background:var(--amber);color:#201400;border:0;border-radius:14px;padding:18px;font:800 22px "Bricolage Grotesque",system-ui,sans-serif;cursor:pointer}.bigbtn:hover{filter:brightness(1.08)}.cta button:focus-visible{outline:3px solid #fff;outline-offset:2px}
+.sl{border-bottom:1px solid var(--line)}.sl summary{cursor:pointer;list-style:none;padding:16px 4px;font:700 22px "Bricolage Grotesque",system-ui,sans-serif;display:flex;gap:12px;align-items:baseline}.sl summary::-webkit-details-marker{display:none}.sl summary::after{content:"▾";margin-left:auto;color:var(--amber)}.sl[open] summary::after{content:"▴"}.sl .n{color:var(--amber);min-width:1.8em}.sl pre{margin:0 0 16px}
+.actions{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:14px 0}
+@media(max-width:620px){.actions{grid-template-columns:1fr}}
+.act{display:flex;flex-direction:column;align-items:flex-start;gap:6px;background:var(--green);color:var(--onGreen);border:3px solid transparent;border-radius:16px;padding:18px;font:800 20px "Bricolage Grotesque",system-ui,sans-serif;cursor:pointer;text-align:left}
+.act span{font-size:30px}.act[aria-pressed="true"]{border-color:var(--amber)}
+.methods{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:10px;margin:8px 0 14px}
+.mbtn{background:var(--surf);color:var(--ink);border:2px solid var(--line);border-radius:12px;padding:14px;font:700 16px "Bricolage Grotesque",system-ui,sans-serif;cursor:pointer}
+.mbtn[aria-pressed="true"]{border-color:var(--amber);background:var(--amberSoft)}
+.dr{display:flex;align-items:center;gap:12px;background:var(--surf);border:1px solid var(--line);border-radius:12px;padding:10px 12px;margin:8px 0}
+.dr .grip{cursor:grab;font-size:28px;line-height:1;color:var(--mut);padding:6px 8px;touch-action:none;user-select:none}
+.dr .num{background:var(--amber);color:#201400;border-radius:50%;width:30px;height:30px;display:grid;place-items:center;font:800 15px "Bricolage Grotesque",sans-serif;flex:none}
+.dr .tt{flex:1;font:700 18px "Bricolage Grotesque",sans-serif}
+.dr .mv button{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:8px;padding:6px 9px;cursor:pointer}.dr .mv button:disabled{opacity:.35;cursor:default}
+.dr.lift{box-shadow:0 8px 24px rgba(0,0,0,.28);border-color:var(--amber);background:var(--amberSoft);cursor:grabbing}
+.isAdmin nav{display:none}.isAdmin .logo::after{content:" · admin";font-size:20px;opacity:.7;font-weight:600}
+@media print{header,.noprint,.toast{display:none!important}body{background:#fff;color:#000}}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<header><div class="bar">
+<button class="logo" data-go="home">Zpívaná</button>
+<nav><button data-go="home">Úvod</button><button data-go="songs">Písničky</button><button data-go="setlist">Setlist</button><button data-go="admin">Admin</button></nav>
+</div></header>
+<main>
+
+<section class="view" id="home">
+<div class="split">
+<div class="panel event">
+<h3>Další zpívání</h3>
+<div class="when" id="evWhen"></div>
+<div id="evWhere"></div>
+<label class="chk"><input type="checkbox" id="evTool"> Přinesu s sebou nástroj</label>
+<div id="evToolMsg" class="note"></div>
+<div id="evToolCount" style="font:700 20px 'Bricolage Grotesque',sans-serif;margin-top:8px"></div>
+</div>
+<div class="panel">
+<h3>Anketa</h3>
+<div id="polls"></div>
+</div>
+</div>
+<button class="bigbtn" data-go="songs" style="margin:20px 0">Vybrat písničky →</button>
+</section>
+
+<section class="view" id="songs">
+<p style="font-size:19px;margin:0 0 14px">Dej palec nahoru písničkám, které chceš hrát.</p>
+<h2>Písničky podle abecedy</h2>
+<div class="panel" id="songDetail" hidden></div>
+<div class="panel" id="songList"></div>
+<h2>Navrhni další písničku</h2>
+<div class="panel">
+<label for="cName">Jméno (nepovinné)</label><input type="text" id="cName">
+<label for="cSong">Písnička a interpret</label><input type="text" id="cSong">
+<label for="cMsg">Poznámka</label><textarea id="cMsg" style="font-family:inherit"></textarea>
+<p><button class="btn" id="cSend">Odeslat návrh</button></p>
+</div>
+</section>
+
+<section class="view" id="setlist">
+<h1 id="slPlace"></h1>
+<p id="slWhen" style="font:600 22px 'Bricolage Grotesque',sans-serif;color:var(--amber);margin:0 0 18px"></p>
+<div id="slList"></div>
+</section>
+
+<section class="view" id="login">
+<h1>Admin</h1>
+<div class="panel" style="max-width:420px">
+<label for="lUser">Přihlašovací jméno</label><input type="text" id="lUser" autocomplete="username">
+<label for="lPass">Heslo</label><input type="password" id="lPass" autocomplete="current-password">
+<p><button class="btn" id="lGo">Přihlásit</button></p>
+<div id="lErr" class="note"></div>
+</div>
+</section>
+
+<section class="view" id="admin">
+<h1>Admin</h1>
+<p><button class="btn ghost" data-go="home">Zpět na web</button> <button class="btn ghost" id="lOut">Odhlásit</button></p>
+<div class="actions">
+<button class="act" data-act="actPoll" aria-pressed="false"><span>📊</span>Vytvořit novou anketu</button>
+<button class="act" data-act="actEvent" aria-pressed="false"><span>📅</span>Vytvořit novou událost</button>
+<button class="act" data-act="actSet" aria-pressed="false"><span>🎶</span>Vytvořit setlist</button>
+</div>
+
+<div class="panel work" id="actPoll" hidden>
+<h3>Aktuální ankety</h3>
+<div id="adPolls"></div>
+<hr style="border:0;border-top:1px solid var(--line);margin:18px 0">
+<h3>Nová anketa</h3>
+<label for="pQ">Otázka</label><input type="text" id="pQ">
+<label for="pO">Možnosti (každá na nový řádek, můžeš použít i smajlíky)</label><textarea id="pO" style="font-family:inherit"></textarea>
+<p><button class="btn" id="pSave">Zveřejnit na úvodní stránce</button></p>
+</div>
+
+<div class="panel work" id="actEvent" hidden>
+<h3>Aktuální událost</h3>
+<div id="adEvents"></div>
+<hr style="border:0;border-top:1px solid var(--line);margin:18px 0">
+<h3>Nová událost</h3>
+<div class="row">
+<div><label for="eDate">Termín</label><input type="text" id="eDate" placeholder="např. pátek 20. 11. 2026, 19:00"></div>
+<div><label for="ePlace">Místo</label><input type="text" id="ePlace"></div>
+</div>
+<p><button class="btn" id="eSave">Zveřejnit na úvodní stránce a v Setlistu</button></p>
+</div>
+
+<div class="panel work" id="actSet" hidden>
+<h3>Aktuální setlist</h3>
+<ol class="set" id="adSet"></ol>
+<hr style="border:0;border-top:1px solid var(--line);margin:18px 0">
+<h3>Hlasy pro písničky</h3>
+<div id="adVotes" style="max-height:320px;overflow-y:auto"></div>
+<p><button class="btn ghost" id="adSync">Obnovit hlasy</button></p>
+<hr style="border:0;border-top:1px solid var(--line);margin:18px 0">
+<h3>Vytvořit nový setlist</h3>
+<label for="sdCount">Kolik písniček?</label>
+<input type="number" id="sdCount" value="10" min="1" max="50" style="max-width:120px">
+<label>Jak je vybrat?</label>
+<div class="methods">
+<button class="mbtn" data-meth="rand" aria-pressed="false">🎲 Náhodný výběr</button>
+<button class="mbtn" data-meth="top" aria-pressed="false">👍 Nejlépe hodnocené</button>
+<button class="mbtn" data-meth="last" aria-pressed="false">↩️ Hráli jsme minule</button>
+<button class="mbtn" data-meth="manual" aria-pressed="false">✅ Manuální výběr</button>
+</div>
+<div id="sdMan" hidden>
+<p class="note" id="sdPicked"></p>
+<div id="sdChecks" style="max-height:320px;overflow-y:auto;border:1px solid var(--line);border-radius:10px;padding:6px 12px"></div>
+<p><button class="btn" id="sdUse">Použít výběr</button></p>
+</div>
+<div id="sdOut" hidden>
+<h3 id="sdTitle" style="margin-top:22px"></h3>
+<p class="note">Změň pořadí: chyť ⠿ a přetáhni písničku na jiné místo, nebo použij šipky.</p>
+<div id="sdList"></div>
+<p><button class="bigbtn" id="sdSave" style="font-size:19px;padding:14px">Uložit jako aktuální setlist</button></p>
+<p id="sdDone" class="note" hidden>Hotovo, hosté ho vidí na stránce Setlist. <button class="btn ghost" data-go="setlist">Zobrazit</button></p>
+</div>
+</div>
+
+</section>
+</main>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+var $=function(s){return document.querySelector(s)};
+var store={get:function(k,d){try{var v=localStorage.getItem(k);return v?JSON.parse(v):d}catch(e){return d}},set:function(k,v){try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}}};
+var songs=[
+{id:1,t:"Variace na renesanční téma",a:"",v:0,c:""},
+{id:2,t:"Růže z papíru",a:"",v:0,c:""},
+{id:3,t:"Severní vítr",a:"",v:0,c:""},
+{id:4,t:"Slavíci z Madridu",a:"",v:0,c:""},
+{id:5,t:"Montgomery",a:"",v:0,c:""},
+{id:6,t:"Sen",a:"",v:0,c:""},
+{id:7,t:"Růže z Texasu",a:"",v:0,c:""},
+{id:8,t:"Rodné údolí",a:"",v:0,c:""},
+{id:9,t:"To ta Helpa",a:"",v:0,c:""},
+{id:10,t:"Knocking on Heaven's Door",a:"",v:0,c:""},
+{id:11,t:"Táhněte do háje",a:"",v:0,c:""},
+{id:12,t:"Veď mě dál",a:"",v:0,c:""},
+{id:13,t:"Jarošovský pivovar",a:"",v:0,c:""},
+{id:14,t:"Bedna od Whiskey",a:"",v:0,c:""},
+{id:15,t:"Mori Turi Te Salutant",a:"",v:0,c:""},
+{id:16,t:"Malování",a:"",v:0,c:""},
+{id:17,t:"Tři kříže",a:"",v:0,c:""},
+{id:18,t:"Okoř",a:"",v:0,c:""},
+{id:19,t:"Proměny",a:"",v:0,c:""},
+{id:20,t:"Amerika",a:"",v:0,c:""},
+{id:21,t:"Miluju a maluju",a:"",v:0,c:""},
+{id:22,t:"Podvod",a:"",v:0,c:""},
+{id:23,t:"Franky Dlouhán",a:"",v:0,c:""},
+{id:24,t:"Valčíček",a:"",v:0,c:""},
+{id:25,t:"Co jste hasiči",a:"",v:0,c:""},
+{id:26,t:"Anděl",a:"",v:0,c:""},
+{id:27,t:"Hudskonský šífy",a:"",v:0,c:""},
+{id:28,t:"Pověste ho verš",a:"",v:0,c:""},
+{id:29,t:"Mezi horami",a:"",v:0,c:""},
+{id:30,t:"Buráky",a:"",v:0,c:""},
+{id:31,t:"Bláznova ukolébavka",a:"",v:0,c:""},
+{id:32,t:"Proklínám",a:"",v:0,c:""},
+{id:33,t:"Wonderwall",a:"",v:0,c:""},
+{id:34,t:"Kometa",a:"",v:0,c:""},
+{id:35,t:"Báječná ženská",a:"",v:0,c:""},
+{id:36,t:"Nad stádem koní",a:"",v:0,c:""}];
+var extra=store.get("extraSongs",[]);songs=songs.concat(extra);
+var myVotes=store.get("votes",{});
+var events=store.get("events3",[{id:1,d:"středa 11. 11. 2026, 18:00",p:"Šmeralka"}]),curId=store.get("curEv",1),tools=store.get("tools",{});
+function cur(){return events.filter(function(e){return e.id===curId})[0]||events[0]||{id:0,d:"Termín zatím nebyl určen",p:""}}
+var polls=store.get("polls3",[
+{q:"Jak se ti líbilo minule?",o:["😄","😐","🙁"],v:[8,3,0]}]);
+var myPoll=store.get("myPoll2",{});
+var API_URL=""; /* sem vlož adresu webové aplikace z Google Apps Script (viz návod); prázdné = hlasy se ukládají jen v tomto prohlížeči */
+var DEV=store.get("dev",null);if(!DEV){DEV=Math.random().toString(36).slice(2)+Date.now().toString(36);store.set("dev",DEV)}
+var shared={votes:{},tools:{}};
+function api(p){if(!API_URL)return Promise.resolve(null);var q=Object.keys(p).map(function(k){return k+"="+encodeURIComponent(p[k])}).join("&");
+return fetch(API_URL+"?"+q+"&_="+Date.now()).then(function(r){return r.json()}).catch(function(){return null})}
+function sync(){return api({action:"stats"}).then(function(d){if(d&&d.votes){shared=d;renderSongs();renderEvent();renderAdmin()}})}
+function toolCount(id){return API_URL?Math.max(shared.tools[id]||0,tools[id]?1:0):(tools[id]?1:0)}
+function ror(x,n){return(x>>>n)|(x<<(32-n))}
+function sha256(m){var K=[0x428a2f98,0x71374491,0xb5c0fbcf,0xe9b5dba5,0x3956c25b,0x59f111f1,0x923f82a4,0xab1c5ed5,0xd807aa98,0x12835b01,0x243185be,0x550c7dc3,0x72be5d74,0x80deb1fe,0x9bdc06a7,0xc19bf174,0xe49b69c1,0xefbe4786,0x0fc19dc6,0x240ca1cc,0x2de92c6f,0x4a7484aa,0x5cb0a9dc,0x76f988da,0x983e5152,0xa831c66d,0xb00327c8,0xbf597fc7,0xc6e00bf3,0xd5a79147,0x06ca6351,0x14292967,0x27b70a85,0x2e1b2138,0x4d2c6dfc,0x53380d13,0x650a7354,0x766a0abb,0x81c2c92e,0x92722c85,0xa2bfe8a1,0xa81a664b,0xc24b8b70,0xc76c51a3,0xd192e819,0xd6990624,0xf40e3585,0x106aa070,0x19a4c116,0x1e376c08,0x2748774c,0x34b0bcb5,0x391c0cb3,0x4ed8aa4a,0x5b9cca4f,0x682e6ff3,0x748f82ee,0x78a5636f,0x84c87814,0x8cc70208,0x90befffa,0xa4506ceb,0xbef9a3f7,0xc67178f2],
+H=[0x6a09e667,0xbb67ae85,0x3c6ef372,0xa54ff53a,0x510e527f,0x9b05688c,0x1f83d9ab,0x5be0cd19],
+b=unescape(encodeURIComponent(m)),l=b.length,N=(((l+8)>>6)+1)*16,w=[],i,j;
+for(i=0;i<N;i++)w[i]=0;
+for(i=0;i<l;i++)w[i>>2]|=b.charCodeAt(i)<<(24-8*(i%4));
+w[l>>2]|=0x80<<(24-8*(l%4));w[N-1]=l*8;
+for(i=0;i<N;i+=16){var W=w.slice(i,i+16),a=H.slice();
+for(j=16;j<64;j++){var s0=ror(W[j-15],7)^ror(W[j-15],18)^(W[j-15]>>>3),s1=ror(W[j-2],17)^ror(W[j-2],19)^(W[j-2]>>>10);W[j]=(W[j-16]+s0+W[j-7]+s1)|0}
+for(j=0;j<64;j++){var S1=ror(a[4],6)^ror(a[4],11)^ror(a[4],25),ch=(a[4]&a[5])^(~a[4]&a[6]),t1=(a[7]+S1+ch+K[j]+W[j])|0,S0=ror(a[0],2)^ror(a[0],13)^ror(a[0],22),mj=(a[0]&a[1])^(a[0]&a[2])^(a[1]&a[2]),t2=(S0+mj)|0;
+a=[(t1+t2)|0,a[0],a[1],a[2],(a[3]+t1)|0,a[4],a[5],a[6]]}
+for(j=0;j<8;j++)H[j]=(H[j]+a[j])|0}
+return H.map(function(x){return("00000000"+(x>>>0).toString(16)).slice(-8)}).join("")}
+var AUTH_HASH="007e211da10211151894b9442eeb3a41178dedff67bcc33b06d11c3fa61bc84b",authed=false;
+function isAuth(){if(authed)return true;try{return sessionStorage.getItem("adm")==="1"}catch(e){return false}}
+function login(){if(sha256($("#lUser").value.trim()+":"+$("#lPass").value)===AUTH_HASH){authed=true;try{sessionStorage.setItem("adm","1")}catch(e){}$("#lPass").value="";$("#lErr").textContent="";go("admin")}else{$("#lErr").textContent="Špatné jméno nebo heslo.";$("#lPass").value=""}}
+$("#lGo").onclick=login;$("#lPass").onkeydown=$("#lUser").onkeydown=function(e){if(e.key==="Enter")login()};
+$("#lOut").onclick=function(){authed=false;try{sessionStorage.removeItem("adm")}catch(e){}go("home")};
+$("#adSync").onclick=function(){sync().then(function(){toast(API_URL?"Hlasy obnoveny":"Sdílené hlasy nejsou zapnuté")})};
+if(API_URL)setInterval(sync,30000);
+function renderAdVotes(){var col=new Intl.Collator("cs");$("#adVotes").innerHTML=songs.slice().sort(function(a,b){return votes(b)-votes(a)||col.compare(a.t,b.t)}).map(function(s){return'<div class="opt" style="cursor:default;display:flex;justify-content:space-between;gap:10px"><span>'+esc(s.t)+'</span><b>👍 '+votes(s)+'</b></div>'}).join("")}
+
+function toast(m){var t=$("#toast");t.textContent=m;t.className="toast on";setTimeout(function(){t.className="toast"},2200)}
+function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
+function votes(s){return API_URL?Math.max(shared.votes[s.id]||0,myVotes[s.id]?1:0):s.v+(myVotes[s.id]?1:0)}
+function go(v){if(v==="admin"&&!isAuth())v="login";document.querySelectorAll(".view").forEach(function(e){e.classList.toggle("on",e.id===v)});
+document.querySelectorAll("nav button").forEach(function(b){b.setAttribute("aria-current",b.dataset.go===v)});document.body.classList.toggle("isAdmin",v==="admin"||v==="login");if(v==="admin"){renderAdmin();document.querySelectorAll(".work").forEach(function(p){p.hidden=true});document.querySelectorAll(".act").forEach(function(x){x.setAttribute("aria-pressed","false")})}if(v==="setlist")renderSetlist();sync();scrollTo(0,0)}
+document.addEventListener("click",function(e){var b=e.target.closest("[data-go]");if(b)go(b.dataset.go)});
+function opts(id,key,all){var set={};songs.forEach(function(s){set[s[key]]=1});$(id).innerHTML='<option value="">'+all+'</option>'+Object.keys(set).sort().map(function(x){return"<option>"+esc(x)+"</option>"}).join("")}
+function fillFilters(){}
+function renderEvent(){var c=cur(),on=!!tools[c.id];$("#evWhen").textContent=c.d;$("#evWhere").textContent=c.p;$("#evTool").checked=on;$("#evTool").disabled=!c.id;$("#evToolMsg").textContent=on?"Díky, počítáme s tebou i s nástrojem.":"";$("#evToolCount").textContent="🎸 Nástroje: "+toolCount(c.id)}
+$("#evTool").onchange=function(){var id=cur().id,was=!!tools[id];tools[id]=this.checked;store.set("tools",tools);
+if(API_URL){shared.tools[id]=Math.max(0,(shared.tools[id]||0)+(this.checked&&!was?1:(!this.checked&&was?-1:0)));api({action:"tool",dev:DEV,event:id,on:this.checked?1:0}).then(sync)}
+renderEvent();renderAdmin();toast(this.checked?"Zapsáno: přineš nástroj":"Zrušeno")};
+document.addEventListener("click",function(e){var b;
+if(b=e.target.closest("[data-showev]")){curId=+b.dataset.showev;store.set("curEv",curId);renderEvent();renderAdmin();toast("Akce je na homepage")}
+else if(b=e.target.closest("[data-delev]")){var id=+b.dataset.delev;events=events.filter(function(x){return x.id!==id});delete tools[id];if(curId===id&&events.length)curId=events[0].id;store.set("events3",events);store.set("curEv",curId);store.set("tools",tools);renderEvent();renderAdmin();toast("Akce smazána")}
+else if(b=e.target.closest("[data-delpoll]")){var i=+b.dataset.delpoll,np={};polls.splice(i,1);Object.keys(myPoll).forEach(function(k){k=+k;if(k<i)np[k]=myPoll[k];else if(k>i)np[k-1]=myPoll[k]});myPoll=np;store.set("polls3",polls);store.set("myPoll2",myPoll);renderPolls();renderAdmin();toast("Anketa smazána")}});
+function renderSongs(){var col=new Intl.Collator("cs"),list=songs.slice().sort(function(a,b){return col.compare(a.t,b.t)}),last="";
+$("#songList").innerHTML=list.map(function(s){var on=!!myVotes[s.id],L=s.t.charAt(0).toUpperCase(),h=L!==last?'<h3 style="margin:16px 0 0;color:var(--amber);font-size:26px">'+esc(L)+'</h3>':'';last=L;
+return h+'<div class="song"><div class="t" data-open="'+s.id+'"><b>'+esc(s.t)+'</b></div><button class="thumb" data-vote="'+s.id+'" aria-pressed="'+on+'" aria-label="Palec nahoru pro '+esc(s.t)+'">👍 '+votes(s)+'</button></div>'}).join("")}
+function chordsHtml(c){return esc(c).replace(/\[([^\]]+)\]/g,"<i>$1</i>")}
+document.addEventListener("click",function(e){
+var v=e.target.closest("[data-vote]");if(v){var id=v.dataset.vote;if(myVotes[id]){toast("Na tomto zařízení už máš hlas započítaný")}else{myVotes[id]=1;store.set("votes",myVotes);if(API_URL){shared.votes[id]=(shared.votes[id]||0)+1;api({action:"vote",dev:DEV,song:id}).then(sync)}toast("Hlas započítán")}renderSongs();return}
+var o=e.target.closest("[data-open]");if(o){var s=songs.filter(function(x){return x.id==o.dataset.open})[0],d=$("#songDetail");d.hidden=false;
+d.innerHTML='<h3>'+esc(s.t)+'</h3><pre class="ch">'+(s.c?chordsHtml(s.c):"Akordy zatím nejsou nahrané.")+'</pre><button class="btn ghost" id="closeD">Zavřít</button>';
+d.scrollIntoView({behavior:"smooth",block:"nearest"});$("#closeD").onclick=function(){d.hidden=true}}});
+
+function renderPolls(){$("#polls").innerHTML=polls.map(function(p,i){var tot=p.v.reduce(function(a,b){return a+b},0)||1,done=myPoll[i]!==undefined;
+return'<div style="margin-bottom:18px"><h3>'+esc(p.q)+'</h3>'+p.o.map(function(o,j){
+if(done){var n=p.v[j]+(myPoll[i]===j?1:0),pc=Math.round(n/(tot+1)*100);return'<div class="opt" style="background:linear-gradient(90deg,var(--amberSoft) '+pc+'%,var(--bg) '+pc+'%)">'+esc(o)+(myPoll[i]===j?" (tvůj hlas)":"")+' <b style="float:right">'+pc+' %</b></div>'}
+return'<button class="opt" style="width:100%;text-align:'+(o.length<=3?'center':'left')+';font-size:'+(o.length<=3?28:16)+'px;color:inherit" data-poll="'+i+'" data-opt="'+j+'">'+esc(o)+'</button>'}).join("")+'</div>'}).join("")}
+document.addEventListener("click",function(e){var b=e.target.closest("[data-poll]");if(b){myPoll[b.dataset.poll]=+b.dataset.opt;store.set("myPoll2",myPoll);renderPolls();toast("Odpověď uložena")}});
+$("#cSend").onclick=function(){if(!$("#cSong").value.trim()){toast("Doplň název písničky");return}$("#cSong").value="";$("#cMsg").value="";$("#cName").value="";toast("Návrh odeslán, díky!")};
+/* admin */
+var draft=[],picked=[],mset="";
+function curSet(){var ids=store.get("setlist1",[]),l=ids.map(sOf).filter(Boolean);if(!l.length){l=songs.slice().sort(function(){return Math.random()-.5}).slice(0,10);store.set("setlist1",l.map(function(s){return s.id}))}return l}
+function renderAdSet(){$("#adSet").innerHTML=curSet().map(function(s){return"<li>"+esc(s.t)+"</li>"}).join("")}
+function sOf(id){return songs.filter(function(s){return s.id===id})[0]}
+function byTitle(){var c=new Intl.Collator("cs");return songs.slice().sort(function(a,b){return c.compare(a.t,b.t)})}
+function cnt(){return Math.max(1,Math.min(songs.length,+$("#sdCount").value||10))}
+function renderDraft(){$("#sdOut").hidden=!draft.length;$("#sdDone").hidden=true;
+$("#sdTitle").textContent="Setlist ("+draft.length+" písní)";
+$("#sdList").innerHTML=draft.map(function(id,i){var s=sOf(id);return'<div class="dr" data-id="'+id+'"><span class="grip" aria-label="Přetáhnout">⠿</span><span class="num">'+(i+1)+'</span><span class="tt">'+esc(s.t)+' <span class="meta">👍 '+votes(s)+'</span></span><span class="mv"><button data-mv="'+id+':-1" aria-label="Posunout výš"'+(i?'':' disabled')+'>▲</button> <button data-mv="'+id+':1" aria-label="Posunout níž"'+(i<draft.length-1?'':' disabled')+'>▼</button></span></div>'}).join("")}
+function renderPicked(){$("#sdPicked").textContent="Vybráno "+picked.length+" z "+cnt()}
+function renderManual(){$("#sdMan").hidden=mset!=="manual";if(mset!=="manual")return;
+$("#sdChecks").innerHTML=byTitle().map(function(s){return'<label class="chk"><input type="checkbox" data-pick="'+s.id+'"'+(picked.indexOf(s.id)>-1?' checked':'')+'> '+esc(s.t)+' <span class="meta">👍 '+votes(s)+'</span></label>'}).join("");renderPicked()}
+function build(m){var n=cnt(),r=[];
+if(m==="rand")r=songs.slice().sort(function(){return Math.random()-.5});
+else if(m==="top")r=byTitle().sort(function(a,b){return votes(b)-votes(a)});
+else if(m==="last"){var ids=store.get("setlistPrev",[]);if(!ids.length)ids=store.get("setlist1",[]);r=ids.map(sOf).filter(Boolean)}
+draft=r.slice(0,n).map(function(s){return s.id});
+if(!draft.length)toast("Z minula zatím nemáme žádné písničky");renderDraft()}
+document.addEventListener("click",function(e){var b;
+if(b=e.target.closest("[data-act]")){var op=b.getAttribute("aria-pressed")==="true";document.querySelectorAll(".work").forEach(function(p){p.hidden=op||p.id!==b.dataset.act});document.querySelectorAll(".act").forEach(function(x){x.setAttribute("aria-pressed",!op&&x===b)});if(!op)$("#"+b.dataset.act).scrollIntoView({behavior:"smooth",block:"nearest"})}
+else if(b=e.target.closest("[data-meth]")){mset=b.dataset.meth;document.querySelectorAll(".mbtn").forEach(function(x){x.setAttribute("aria-pressed",x===b)});renderManual();if(mset!=="manual")build(mset)}
+else if(b=e.target.closest("[data-mv]")){var a=b.dataset.mv.split(":"),id=+a[0],d=+a[1],i=draft.indexOf(id),j=i+d;if(j>=0&&j<draft.length){draft.splice(i,1);draft.splice(j,0,id);renderDraft()}}});
+document.addEventListener("change",function(e){var c=e.target.closest("[data-pick]");if(!c)return;var id=+c.dataset.pick,i=picked.indexOf(id);
+if(c.checked){if(picked.length>=cnt()){c.checked=false;toast("Máš vybraný plný počet písniček");return}picked.push(id)}else if(i>-1)picked.splice(i,1);renderPicked()});
+$("#sdCount").onchange=function(){if(mset==="manual")renderPicked()};
+$("#sdUse").onclick=function(){if(!picked.length){toast("Zaškrtni aspoň jednu písničku");return}draft=picked.slice();renderDraft()};
+$("#sdSave").onclick=function(){if(!draft.length)return;store.set("setlist1",draft.slice());renderAdSet();$("#sdDone").hidden=false;toast("Setlist je uložený jako aktuální")};
+var dragEl=null,L=$("#sdList");
+L.addEventListener("pointerdown",function(e){var h=e.target.closest(".grip");if(!h)return;dragEl=h.closest(".dr");dragEl.classList.add("lift");L.setPointerCapture(e.pointerId);e.preventDefault()});
+L.addEventListener("pointermove",function(e){if(!dragEl)return;var rows=[].slice.call(L.children).filter(function(r){return r!==dragEl});
+for(var i=0;i<rows.length;i++){var r=rows[i].getBoundingClientRect();if(e.clientY<r.top+r.height/2){L.insertBefore(dragEl,rows[i]);return}}L.appendChild(dragEl)});
+function endDrag(){if(!dragEl)return;dragEl=null;draft=[].map.call(L.children,function(r){return+r.dataset.id});renderDraft()}
+L.addEventListener("pointerup",endDrag);L.addEventListener("pointercancel",endDrag);
+$("#eSave").onclick=function(){if(!$("#eDate").value.trim()||!$("#ePlace").value.trim()){toast("Vyplňte termín i místo");return}
+store.set("setlistPrev",store.get("setlist1",[]));var ne={id:Date.now(),d:$("#eDate").value,p:$("#ePlace").value};events.push(ne);curId=ne.id;store.set("events3",events);store.set("curEv",curId);$("#eDate").value="";$("#ePlace").value="";renderEvent();renderAdmin();toast("Událost je na úvodní stránce i v Setlistu")};
+$("#pSave").onclick=function(){var o=$("#pO").value.split("\n").map(function(x){return x.trim()}).filter(Boolean);
+if(!$("#pQ").value.trim()||o.length<2){toast("Doplňte otázku a aspoň dvě možnosti");return}
+polls.push({q:$("#pQ").value,o:o,v:o.map(function(){return 0})});store.set("polls3",polls);$("#pQ").value="";$("#pO").value="";renderPolls();renderAdmin();toast("Anketa je na úvodní stránce")};
+function renderSetlist(){var c=cur(),ids=store.get("setlist1",[]),list=ids.map(function(id){return songs.filter(function(s){return s.id===id})[0]}).filter(Boolean);
+if(!list.length){list=songs.slice().sort(function(){return Math.random()-.5}).slice(0,10);store.set("setlist1",list.map(function(s){return s.id}))}
+$("#slPlace").textContent=c.p;$("#slWhen").textContent=c.d;
+$("#slList").innerHTML=list.map(function(s,i){return'<details class="sl"><summary><span class="n">'+(i+1)+'.</span><span>'+esc(s.t)+'</span></summary><pre class="ch">'+(s.c?chordsHtml(s.c):"Akordy zatím nejsou nahrané.")+'</pre></details>'}).join("")}
+function route(){go(location.hash==="#admin"?"admin":"home")}
+function renderAdmin(){var c=cur();renderAdSet();renderAdVotes();$("#adEvents").innerHTML=events.slice().sort(function(a,b){return(b.id===c.id)-(a.id===c.id)}).map(function(e){var on=e.id===c.id;return'<div class="opt" style="cursor:default"><b>'+esc(e.d)+'</b> – '+esc(e.p)+(on?' <span class="tag">na homepage</span>':'')+'<br><span class="meta">Přinesou nástroj: '+toolCount(e.id)+'</span><br>'+(on?'':'<button class="btn ghost" data-showev="'+e.id+'">Zobrazit na homepage</button> ')+'<button class="btn ghost" data-delev="'+e.id+'">Smazat</button></div>'}).join("")||'<p class="note">Žádná akce. Přidejte ji níže.</p>';
+$("#adPolls").innerHTML=polls.map(function(p,i){var mine=myPoll[i],tot=p.v.reduce(function(a,b){return a+b},0)+(mine!==undefined?1:0);
+return'<div style="margin-bottom:16px"><h3>'+esc(p.q)+' <span class="meta">('+tot+' odpovědí)</span></h3><button class="btn ghost" data-delpoll="'+i+'" style="margin-bottom:8px">Smazat anketu</button>'+p.o.map(function(o,j){var n=p.v[j]+(mine===j?1:0),pc=tot?Math.round(n/tot*100):0;
+return'<div class="opt" style="cursor:default;background:linear-gradient(90deg,var(--amberSoft) '+pc+'%,var(--bg) '+pc+'%)">'+esc(o)+' <b style="float:right">'+n+' · '+pc+' %</b></div>'}).join("")+'</div>'}).join("")}
+fillFilters();renderEvent();renderSongs();renderPolls();renderAdmin();route();addEventListener("hashchange",route);
+</script>
+</body>
+</html>
