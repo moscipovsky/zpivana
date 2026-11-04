@@ -81,7 +81,7 @@ ol.set{padding-left:24px}ol.set li{padding:6px 0;border-bottom:1px solid var(--l
 <body>
 <header><div class="bar">
 <button class="logo" data-go="home">Zpívaná</button>
-<nav><button data-go="home">Úvod</button><button data-go="songs">Písničky</button><button data-go="setlist">Setlist</button><button data-go="admin">Admin</button></nav>
+<nav><button data-go="home">Úvod</button><button data-go="setlist">Setlist</button><button data-go="admin">Admin</button></nav>
 </div></header>
 <main>
 
@@ -91,16 +91,13 @@ ol.set{padding-left:24px}ol.set li{padding:6px 0;border-bottom:1px solid var(--l
 <h3>Další zpívání</h3>
 <div class="when" id="evWhen"></div>
 <div id="evWhere"></div>
-<label class="chk"><input type="checkbox" id="evTool"> Přinesu s sebou nástroj</label>
-<div id="evToolMsg" class="note"></div>
-<div id="evToolCount" style="font:700 20px 'Bricolage Grotesque',sans-serif;margin-top:8px"></div>
+<div style="font:600 18px 'Bricolage Grotesque',sans-serif;margin:4px 0 10px">Nástroje vítány!</div>
 </div>
 <div class="panel">
 <h3>Anketa</h3>
 <div id="polls"></div>
 </div>
 </div>
-<button class="bigbtn" data-go="songs" style="margin:20px 0">Vybrat písničky →</button>
 </section>
 
 <section class="view" id="songs">
@@ -242,11 +239,11 @@ var songs=[
 {id:36,t:"Nad stádem koní",a:"",v:0,c:""}];
 var extra=store.get("extraSongs",[]);songs=songs.concat(extra);
 var myVotes=store.get("votes",{});
-var events=store.get("events3",[{id:1,d:"středa 11. 11. 2026, 18:00",p:"Šmeralka"}]),curId=store.get("curEv",1),tools=store.get("tools",{});
+var events=store.get("events4",[{id:1,d:"11. 11. od 18:00",p:"Šmeralka"}]),curId=store.get("curEv",1),tools=store.get("tools",{});
 function cur(){return events.filter(function(e){return e.id===curId})[0]||events[0]||{id:0,d:"Termín zatím nebyl určen",p:""}}
-var polls=store.get("polls3",[
-{q:"Jak se ti líbilo minule?",o:["😄","😐","🙁"],v:[8,3,0]}]);
-var myPoll=store.get("myPoll2",{});
+var polls=store.get("polls4",[
+{q:"Jaká speciální akce ve Šmeralce na 11.11. je nejvíc nejlepší?",o:["Cuba Libre za 99 Kč","Skinny Bitch za 99 Kč","Variace nakládaných sýrů za 130 Kč"],v:[0,0,0]}]);
+var myPoll=store.get("myPoll3",{});
 var API_URL="https://script.google.com/macros/s/AKfycbyHQa2dTHbODYNbj9tEZp6zunHxf5roQl-XmmGtfYqXlsVM6lYrNIa23VzdtcsnNV1JXg/exec"; /* sem vlož adresu webové aplikace z Google Apps Script (viz návod); prázdné = hlasy se ukládají jen v tomto prohlížeči */
 var DEV=store.get("dev",null);if(!DEV){DEV=Math.random().toString(36).slice(2)+Date.now().toString(36);store.set("dev",DEV)}
 var shared={votes:{},tools:{}},syncOk=null;
@@ -285,14 +282,11 @@ document.querySelectorAll("nav button").forEach(function(b){b.setAttribute("aria
 document.addEventListener("click",function(e){var b=e.target.closest("[data-go]");if(b)go(b.dataset.go)});
 function opts(id,key,all){var set={};songs.forEach(function(s){set[s[key]]=1});$(id).innerHTML='<option value="">'+all+'</option>'+Object.keys(set).sort().map(function(x){return"<option>"+esc(x)+"</option>"}).join("")}
 function fillFilters(){}
-function renderEvent(){var c=cur(),on=!!tools[c.id];$("#evWhen").textContent=c.d;$("#evWhere").textContent=c.p;$("#evTool").checked=on;$("#evTool").disabled=!c.id;$("#evToolMsg").textContent=on?"Díky, počítáme s tebou i s nástrojem.":"";$("#evToolCount").textContent="🎸 Nástroje: "+toolCount(c.id)}
-$("#evTool").onchange=function(){var id=cur().id,was=!!tools[id];tools[id]=this.checked;store.set("tools",tools);
-if(API_URL){shared.tools[id]=Math.max(0,(shared.tools[id]||0)+(this.checked&&!was?1:(!this.checked&&was?-1:0)));api({action:"tool",dev:DEV,event:id,on:this.checked?1:0}).then(sync)}
-renderEvent();renderAdmin();toast(this.checked?"Zapsáno: přineš nástroj":"Zrušeno")};
+function renderEvent(){var c=cur();$("#evWhen").textContent=c.d;$("#evWhere").textContent=c.p}
 document.addEventListener("click",function(e){var b;
 if(b=e.target.closest("[data-showev]")){curId=+b.dataset.showev;store.set("curEv",curId);renderEvent();renderAdmin();toast("Akce je na homepage")}
-else if(b=e.target.closest("[data-delev]")){var id=+b.dataset.delev;events=events.filter(function(x){return x.id!==id});delete tools[id];if(curId===id&&events.length)curId=events[0].id;store.set("events3",events);store.set("curEv",curId);store.set("tools",tools);renderEvent();renderAdmin();toast("Akce smazána")}
-else if(b=e.target.closest("[data-delpoll]")){var i=+b.dataset.delpoll,np={};polls.splice(i,1);Object.keys(myPoll).forEach(function(k){k=+k;if(k<i)np[k]=myPoll[k];else if(k>i)np[k-1]=myPoll[k]});myPoll=np;store.set("polls3",polls);store.set("myPoll2",myPoll);renderPolls();renderAdmin();toast("Anketa smazána")}});
+else if(b=e.target.closest("[data-delev]")){var id=+b.dataset.delev;events=events.filter(function(x){return x.id!==id});delete tools[id];if(curId===id&&events.length)curId=events[0].id;store.set("events4",events);store.set("curEv",curId);store.set("tools",tools);renderEvent();renderAdmin();toast("Akce smazána")}
+else if(b=e.target.closest("[data-delpoll]")){var i=+b.dataset.delpoll,np={};polls.splice(i,1);Object.keys(myPoll).forEach(function(k){k=+k;if(k<i)np[k]=myPoll[k];else if(k>i)np[k-1]=myPoll[k]});myPoll=np;store.set("polls4",polls);store.set("myPoll3",myPoll);renderPolls();renderAdmin();toast("Anketa smazána")}});
 function renderSongs(){var col=new Intl.Collator("cs"),list=songs.slice().sort(function(a,b){return col.compare(a.t,b.t)}),last="";
 $("#songList").innerHTML=list.map(function(s){var on=!!myVotes[s.id],L=s.t.charAt(0).toUpperCase(),h=L!==last?'<h3 style="margin:16px 0 0;color:var(--amber);font-size:26px">'+esc(L)+'</h3>':'';last=L;
 return h+'<div class="song"><div class="t" data-open="'+s.id+'"><b>'+esc(s.t)+'</b></div><button class="thumb" data-vote="'+s.id+'" aria-pressed="'+on+'" aria-label="Palec nahoru pro '+esc(s.t)+'">👍 '+votes(s)+'</button></div>'}).join("")}
@@ -307,11 +301,11 @@ function renderPolls(){$("#polls").innerHTML=polls.map(function(p,i){var tot=p.v
 return'<div style="margin-bottom:18px"><h3>'+esc(p.q)+'</h3>'+p.o.map(function(o,j){
 if(done){var n=p.v[j]+(myPoll[i]===j?1:0),pc=Math.round(n/(tot+1)*100);return'<div class="opt" style="background:linear-gradient(90deg,var(--amberSoft) '+pc+'%,var(--bg) '+pc+'%)">'+esc(o)+(myPoll[i]===j?" (tvůj hlas)":"")+' <b style="float:right">'+pc+' %</b></div>'}
 return'<button class="opt" style="width:100%;text-align:'+(o.length<=3?'center':'left')+';font-size:'+(o.length<=3?28:16)+'px;color:inherit" data-poll="'+i+'" data-opt="'+j+'">'+esc(o)+'</button>'}).join("")+'</div>'}).join("")}
-document.addEventListener("click",function(e){var b=e.target.closest("[data-poll]");if(b){myPoll[b.dataset.poll]=+b.dataset.opt;store.set("myPoll2",myPoll);renderPolls();toast("Odpověď uložena")}});
+document.addEventListener("click",function(e){var b=e.target.closest("[data-poll]");if(b){myPoll[b.dataset.poll]=+b.dataset.opt;store.set("myPoll3",myPoll);renderPolls();toast("Odpověď uložena")}});
 $("#cSend").onclick=function(){if(!$("#cSong").value.trim()){toast("Doplň název písničky");return}$("#cSong").value="";$("#cMsg").value="";$("#cName").value="";toast("Návrh odeslán, díky!")};
 /* admin */
 var draft=[],picked=[],mset="";
-function curSet(){var ids=store.get("setlist1",[]),l=ids.map(sOf).filter(Boolean);if(!l.length){l=songs.slice().sort(function(){return Math.random()-.5}).slice(0,10);store.set("setlist1",l.map(function(s){return s.id}))}return l}
+function curSet(){var ids=store.get("setlist2",[]),l=ids.map(sOf).filter(Boolean);if(!l.length)l=songs.slice();return l}
 function renderAdSet(){$("#adSet").innerHTML=curSet().map(function(s){return"<li>"+esc(s.t)+"</li>"}).join("")}
 function sOf(id){return songs.filter(function(s){return s.id===id})[0]}
 function byTitle(){var c=new Intl.Collator("cs");return songs.slice().sort(function(a,b){return c.compare(a.t,b.t)})}
@@ -325,7 +319,7 @@ $("#sdChecks").innerHTML=byTitle().map(function(s){return'<label class="chk"><in
 function build(m){var n=cnt(),r=[];
 if(m==="rand")r=songs.slice().sort(function(){return Math.random()-.5});
 else if(m==="top")r=byTitle().sort(function(a,b){return votes(b)-votes(a)});
-else if(m==="last"){var ids=store.get("setlistPrev",[]);if(!ids.length)ids=store.get("setlist1",[]);r=ids.map(sOf).filter(Boolean)}
+else if(m==="last"){var ids=store.get("setlistPrev",[]);if(!ids.length)ids=store.get("setlist2",[]);r=ids.map(sOf).filter(Boolean)}
 draft=r.slice(0,n).map(function(s){return s.id});
 if(!draft.length)toast("Z minula zatím nemáme žádné písničky");renderDraft()}
 document.addEventListener("click",function(e){var b;
@@ -336,7 +330,7 @@ document.addEventListener("change",function(e){var c=e.target.closest("[data-pic
 if(c.checked){if(picked.length>=cnt()){c.checked=false;toast("Máš vybraný plný počet písniček");return}picked.push(id)}else if(i>-1)picked.splice(i,1);renderPicked()});
 $("#sdCount").onchange=function(){if(mset==="manual")renderPicked()};
 $("#sdUse").onclick=function(){if(!picked.length){toast("Zaškrtni aspoň jednu písničku");return}draft=picked.slice();renderDraft()};
-$("#sdSave").onclick=function(){if(!draft.length)return;store.set("setlist1",draft.slice());renderAdSet();$("#sdDone").hidden=false;toast("Setlist je uložený jako aktuální")};
+$("#sdSave").onclick=function(){if(!draft.length)return;store.set("setlist2",draft.slice());renderAdSet();$("#sdDone").hidden=false;toast("Setlist je uložený jako aktuální")};
 var dragEl=null,L=$("#sdList");
 L.addEventListener("pointerdown",function(e){var h=e.target.closest(".grip");if(!h)return;dragEl=h.closest(".dr");dragEl.classList.add("lift");L.setPointerCapture(e.pointerId);e.preventDefault()});
 L.addEventListener("pointermove",function(e){if(!dragEl)return;var rows=[].slice.call(L.children).filter(function(r){return r!==dragEl});
@@ -344,16 +338,16 @@ for(var i=0;i<rows.length;i++){var r=rows[i].getBoundingClientRect();if(e.client
 function endDrag(){if(!dragEl)return;dragEl=null;draft=[].map.call(L.children,function(r){return+r.dataset.id});renderDraft()}
 L.addEventListener("pointerup",endDrag);L.addEventListener("pointercancel",endDrag);
 $("#eSave").onclick=function(){if(!$("#eDate").value.trim()||!$("#ePlace").value.trim()){toast("Vyplňte termín i místo");return}
-store.set("setlistPrev",store.get("setlist1",[]));var ne={id:Date.now(),d:$("#eDate").value,p:$("#ePlace").value};events.push(ne);curId=ne.id;store.set("events3",events);store.set("curEv",curId);$("#eDate").value="";$("#ePlace").value="";renderEvent();renderAdmin();toast("Událost je na úvodní stránce i v Setlistu")};
+store.set("setlistPrev",store.get("setlist2",[]));var ne={id:Date.now(),d:$("#eDate").value,p:$("#ePlace").value};events.push(ne);curId=ne.id;store.set("events4",events);store.set("curEv",curId);$("#eDate").value="";$("#ePlace").value="";renderEvent();renderAdmin();toast("Událost je na úvodní stránce i v Setlistu")};
 $("#pSave").onclick=function(){var o=$("#pO").value.split("\n").map(function(x){return x.trim()}).filter(Boolean);
 if(!$("#pQ").value.trim()||o.length<2){toast("Doplňte otázku a aspoň dvě možnosti");return}
-polls.push({q:$("#pQ").value,o:o,v:o.map(function(){return 0})});store.set("polls3",polls);$("#pQ").value="";$("#pO").value="";renderPolls();renderAdmin();toast("Anketa je na úvodní stránce")};
-function renderSetlist(){var c=cur(),ids=store.get("setlist1",[]),list=ids.map(function(id){return songs.filter(function(s){return s.id===id})[0]}).filter(Boolean);
-if(!list.length){list=songs.slice().sort(function(){return Math.random()-.5}).slice(0,10);store.set("setlist1",list.map(function(s){return s.id}))}
+polls.push({q:$("#pQ").value,o:o,v:o.map(function(){return 0})});store.set("polls4",polls);$("#pQ").value="";$("#pO").value="";renderPolls();renderAdmin();toast("Anketa je na úvodní stránce")};
+function renderSetlist(){var c=cur(),ids=store.get("setlist2",[]),list=ids.map(function(id){return songs.filter(function(s){return s.id===id})[0]}).filter(Boolean);
+if(!list.length)list=songs.slice();
 $("#slPlace").textContent=c.p;$("#slWhen").textContent=c.d;
 $("#slList").innerHTML=list.map(function(s,i){return'<details class="sl"><summary><span class="n">'+(i+1)+'.</span><span>'+esc(s.t)+'</span></summary><pre class="ch">'+(s.c?chordsHtml(s.c):"Akordy zatím nejsou nahrané.")+'</pre></details>'}).join("")}
 function route(){go(location.hash==="#admin"?"admin":"home")}
-function renderAdmin(){var c=cur();renderAdSet();renderAdVotes();$("#adEvents").innerHTML=events.slice().sort(function(a,b){return(b.id===c.id)-(a.id===c.id)}).map(function(e){var on=e.id===c.id;return'<div class="opt" style="cursor:default"><b>'+esc(e.d)+'</b> – '+esc(e.p)+(on?' <span class="tag">na homepage</span>':'')+'<br><span class="meta">Přinesou nástroj: '+toolCount(e.id)+'</span><br>'+(on?'':'<button class="btn ghost" data-showev="'+e.id+'">Zobrazit na homepage</button> ')+'<button class="btn ghost" data-delev="'+e.id+'">Smazat</button></div>'}).join("")||'<p class="note">Žádná akce. Přidejte ji níže.</p>';
+function renderAdmin(){var c=cur();renderAdSet();renderAdVotes();$("#adEvents").innerHTML=events.slice().sort(function(a,b){return(b.id===c.id)-(a.id===c.id)}).map(function(e){var on=e.id===c.id;return'<div class="opt" style="cursor:default"><b>'+esc(e.d)+'</b> – '+esc(e.p)+(on?' <span class="tag">na homepage</span>':'')+'<br>'+(on?'':'<button class="btn ghost" data-showev="'+e.id+'">Zobrazit na homepage</button> ')+'<button class="btn ghost" data-delev="'+e.id+'">Smazat</button></div>'}).join("")||'<p class="note">Žádná akce. Přidejte ji níže.</p>';
 $("#adPolls").innerHTML=polls.map(function(p,i){var mine=myPoll[i],tot=p.v.reduce(function(a,b){return a+b},0)+(mine!==undefined?1:0);
 return'<div style="margin-bottom:16px"><h3>'+esc(p.q)+' <span class="meta">('+tot+' odpovědí)</span></h3><button class="btn ghost" data-delpoll="'+i+'" style="margin-bottom:8px">Smazat anketu</button>'+p.o.map(function(o,j){var n=p.v[j]+(mine===j?1:0),pc=tot?Math.round(n/tot*100):0;
 return'<div class="opt" style="cursor:default;background:linear-gradient(90deg,var(--amberSoft) '+pc+'%,var(--bg) '+pc+'%)">'+esc(o)+' <b style="float:right">'+n+' · '+pc+' %</b></div>'}).join("")+'</div>'}).join("")}
