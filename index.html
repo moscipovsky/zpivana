@@ -73,6 +73,21 @@ ol.set{padding-left:24px}ol.set li{padding:6px 0;border-bottom:1px solid var(--l
 .songbtn{display:flex;align-items:center;justify-content:space-between;gap:10px;background:rgba(255,255,255,.12);color:inherit;border:1px solid rgba(255,255,255,.35);border-radius:12px;padding:14px 16px;font:700 17px "Bricolage Grotesque",system-ui,sans-serif;cursor:pointer;text-align:left}.songbtn:hover{background:rgba(255,255,255,.24)}.songbtn small{font-weight:500;opacity:.85}
 .bigbtn{display:block;width:100%;background:var(--amber);color:#201400;border:0;border-radius:14px;padding:18px;font:800 22px "Bricolage Grotesque",system-ui,sans-serif;cursor:pointer}.bigbtn:hover{filter:brightness(1.08)}.cta button:focus-visible{outline:3px solid #fff;outline-offset:2px}
 .sl{border-bottom:1px solid var(--line)}.sl summary{cursor:pointer;list-style:none;padding:16px 4px;font:700 22px "Bricolage Grotesque",system-ui,sans-serif;display:flex;gap:12px;align-items:baseline}.sl summary::-webkit-details-marker{display:none}.sl summary::after{content:"▾";margin-left:auto;color:var(--amber)}.sl[open] summary::after{content:"▴"}.sl .n{color:var(--amber);min-width:1.8em}.sl .ch{margin:0 0 16px}
+.tp{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 10px;font:600 15px "Bricolage Grotesque",system-ui,sans-serif}
+.tpl{color:var(--mut);margin-right:2px}
+.tpb{min-width:44px;height:44px;border:1px solid var(--line);background:var(--surf);color:var(--ink);border-radius:10px;font:700 22px "Bricolage Grotesque",system-ui,sans-serif;cursor:pointer;padding:0 12px}
+.tpb:disabled{opacity:.4;cursor:default}
+.tpr{font-size:15px}
+.tpv{min-width:2.6em;text-align:center;font:800 20px ui-monospace,Menlo,monospace;color:var(--chord)}
+.mt{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin:0 0 12px;font:600 15px "Bricolage Grotesque",system-ui,sans-serif}
+.mt .mti{width:76px;height:44px;padding:0 6px;text-align:center;font:800 20px ui-monospace,Menlo,monospace;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px}
+.mt .mts{width:auto;height:44px;padding:0 8px;font-size:16px}
+.mtgo{min-width:104px}
+.mtgo[aria-pressed="true"]{background:var(--amber);border-color:var(--amber);color:#201400}
+.mtd{display:inline-flex;gap:6px;margin-left:4px}
+.mtd i{display:block;width:14px;height:14px;border-radius:50%;background:var(--line)}
+.mtd i.on{background:var(--amber)}.mtd i:first-child.on{background:var(--chord)}
+@media print{.tp,.mt{display:none}}
 .sl .grip{cursor:grab;color:var(--mut);font-size:26px;line-height:1;padding:8px 10px;margin:-8px -6px -8px -10px;touch-action:none;user-select:none;-webkit-user-select:none;align-self:center}
 .sl.lift{box-shadow:0 8px 24px rgba(0,0,0,.28);background:var(--amberSoft);border-radius:12px;cursor:grabbing}
 .actions{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:14px 0}
@@ -251,7 +266,7 @@ var songs=[
 {id:20,t:"Amerika",a:"",v:0,c:"# Em\n\n1. [G]Nandej mi [D]do hlavy Tvý [Am]brouky, a Bůh nám seber bezna[G]děj.\n   V duši zbylo [D]světlo z jedný [Am]holky, tak mi teď za to vyna[G]dej.\n\n2. Zima a [D]promarněný [Am]touhy, do vrásek stromů padá [G]déšť.\n   Zbejvaj roky, [D]asi ne moc [Am]dlouhý,\n   do vlasů mi zabrou[C]kej ... pa-pa-pa-[G]pá\n\nRef: [G]Pa-[D/F#]pa-pa-[Em]pá, pá-pa-pa-[G]pá, jejé,\n     [G]pa-[D/F#]pa-pa-[Em]pá, pá-pa-pa-[G]pá.\n\n4. [G]Tvoje oči [D]jenom žhavý [Am]tóny, dotek slunce zapa[G]dá.\n   Horkej vítr [D]rozezní mý [Am]zvony,\n   do vlasů Ti zabrou[C]kám ... pá-pa-pá-[G]pá\n\n# G, D, Em, G\n# G, D, Em, G\n\n     [G]pa-[D/F#]pa-pa-[Em]pá, pá-pa-pa-[G]pá\n     [G]pa-[D/F#]pa-pa-[Em]pá, pá-pa-pa-[G]pá\n\n5. [G]Na obloze kř[D]ídla tažnejch [Am]ptáků, tak už na svý bráchy zavo[G]lej.\n   Na tváře Ti [D]padaj slzy z [Am]mraků a Bůh nám sebral bezna[G]děj.\n\n6. V duši zbylo [D]světlo z jedný [Am]holky, do vrásek stromů padá [G]déšť.\n   Poslední dny, [D]hodiny a [Am]roky,\n   do vlasů Ti zabrou[C]kám...pá-pa-pá-[G]pá\n\nRef: [G]Pa-[D/F#]pa-pa-[Em]pá, pá-pa-pa-[G]pá, je-jé,\n     [G]pa-[D/F#]pa-pa-[Em]pá, pá-pa-pa-[G]pá."},
 {id:21,t:"Miluju a maluju",a:"",v:0,c:"[Emi]Dejte mi [Hmi]malíři [C]barvy všech [D]druhů\n[Emi]Já budu [Hmi]do mraků [C]malovat [D]duhu\n[Emi]Řekněte básnici [Hmi]jak se verš skládá\n[C]Ona mne ona mne [C]asi [D]má ráda.\n\nJá [C]nejsem ani Leonardo ani Michelangelo\n[D]paletu mám amatérsky chudou\n[Ami]ale když mne paní můza políbila na čelo\n[D]Rozhod jsem se skoncovati s [G]nudou\n\nR: [C]Samým [F]blahem, [C]jedním [F]tahem\n   [C]srdce z [D]lásky [F]malu[G]ju\n   [C]Proto[F]že já, [C]proto[F]že já,\n   [C]proto[D]že já [F]milu[G]ju\n   A [C]maluju a [F]miluju, a [C]miluju a [F]maluju\n   a [C]miluju a [F]maluju a [C]miluju a [F]maluju.\n\nJá [C]neměl nikdy nadání mě nehýčkali uměny\n[D]Z kreslení jsem vždycky míval pětky.\n[Ami]Ale dneska vlastní duší kreslím fresky na stěny\n[D]fagule mi slouží místo [G]štětky.\n\nR: [C]Samým [F]blahem, [C]jedním [F]tahem\n   [C]srdce z [D]lásky [F]malu[G]ju\n   [C]Proto[F]že já, [C]proto[F]že já,\n   [C]proto[D]že já [F]milu[G]ju\n   A [C]maluju a [F]miluju, a [C]miluju a [F]maluju\n   a [C]miluju a [F]maluju a [C]miluju a [F]maluju."},
 {id:26,t:"Anděl",a:"",v:0,c:"# D, A7\n\n1. [D]Z rozmláce[Hm]ného kostela [D]v krabici [A7]s kusem mýdla,\n   [D]přinesl [Hm]jsem si anděla, [D]poláma[A7]li mu kří[D]dla.\n   [D]Díval se [Hm]na mě oddaně, [D]já měl [A7]jsem trochu trému,\n   [D]tak vtiskl [Hm]jsem mu do dlaně, [D]lahvičku [A7]od parfé[D]mu.\n\nRef: [D]A proto [Hm]prosím věř mi, [D]chtěl jsem ho [A7]žádat,\n     [D]aby mi [Hm]mezi dveřmi, [D]pomohl [A7]hádat,\n     [D]co mě če[Hm]ká – [A7]a nemi[D]neee,\n     [D]co mě če[Hm]ká – [A7]a nemi[D]ne.[A7]\n\n2. [D]Pak hlída[Hm]li jsme oblohu, [D]pozoru[A7]jíce ptáky,\n   [D]debatu[Hm]jící o Bohu [D]a hra[A7]ní na vojá[D]ky.\n   [D]Do tváře [Hm]jsem mu neviděl, [D]pokou[A7]šel si ji schovat,\n   [D]to asi [Hm]ptákům záviděl, [D]že mo[A7]hou poleto[D]vat.\n\nRef: [D]A proto [Hm]prosím věř mi, [D]chtěl jsem ho [A7]žádat,\n     [D]aby mi [Hm]mezi dveřmi, [D]pomohl [A7]hádat,\n     [D]co mě če[Hm]ká – [A7]a nemi[D]neee,\n     [D]co mě če[Hm]ká – [A7]a nemi[D]ne.[A7]\n\n3. [D]Když novin[Hm]ky mi sděloval, [D]u okna [A7]do ložnice,\n   [D]já křídla [Hm]jsem mu ukoval [D]z mosazný [A7]nábojni[D]ce.\n   [D]A tak jsem [Hm]pozbyl anděla, [D]on oknem [A7]odletěl mi,\n   [D]však přítel [Hm]prý mi udělá, [D]nového [A7]z mojí hel[D]my.\n\nRef: [D]A proto [Hm]prosím věř mi, [D]chtěl jsem ho [A7]žádat,\n     [D]aby mi [Hm]mezi dveřmi, [D]pomohl [A7]hádat,\n     [D]co mě če[Hm]ká – [A7]a nemi[D]neee,\n     [D]co mě če[Hm]ká [G]– [A]a nemi[D]ne.\n\n# Hm, G, A, D"},
-{id:29,t:"Mezi horami",a:"",v:0,c:""},
+{id:29,t:"Mezi horami",a:"",v:0,c:"# Gm, F, Gm, F, Gm\n\n[:  [Gm]Mezi horami, lipka zelená. :]\n[:  [B]Zabili Janka, [F]Janíčka, [Gm]Janka, miesto [F]jele[Gm]ňa. :]\n\n[:  [Gm]Keď ho zabili, zamordovali. :]\n[:  [B]Na jeho hrobě, [F]na jeho [Gm]hrobě, kříž po[F]stavi[Gm]li. :]\n\n[:  [Gm]Ej křížu, křížu, ukřižovaný. :]\n[:  [B]Zde leží Janík, [F]Janíček, [Gm]Janík, zamor[F]dova[Gm]ný. :]\n\n# G, F, G, F, G,\n# Gm, F, Gm, F, Gm\n\n[:  [Gm]Tu šla Anička, plakat Janíčka. :]\n[:  [B]Hned na hrob padla [F]a viac nev[Gm]stala, dobrá [F]Anič[Gm]ka. :]\n\n# Gm, F, Gm, F, Gm, F, Gm, F, Gm"},
 {id:31,t:"Bláznova ukolébavka",a:"",v:0,c:""},
 {id:22,t:"Podvod",a:"",v:0,c:""},
 {id:23,t:"Franky Dlouhán",a:"",v:0,c:""},
@@ -305,7 +320,7 @@ function renderAdVotes(){var col=new Intl.Collator("cs");$("#adVotes").innerHTML
 function toast(m){var t=$("#toast");t.textContent=m;t.className="toast on";setTimeout(function(){t.className="toast"},2200)}
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]})}
 function votes(s){return API_URL?Math.max(shared.votes[s.id]||0,myVotes[s.id]?1:0):s.v+(myVotes[s.id]?1:0)}
-function go(v){if(v==="admin"&&!isAuth())v="login";document.querySelectorAll(".view").forEach(function(e){e.classList.toggle("on",e.id===v)});
+function go(v){mtStop();if(v==="admin"&&!isAuth())v="login";document.querySelectorAll(".view").forEach(function(e){e.classList.toggle("on",e.id===v)});
 document.querySelectorAll("nav button").forEach(function(b){b.setAttribute("aria-current",b.dataset.go===v)});document.body.classList.toggle("isAdmin",v==="admin"||v==="login");if(v==="admin"){renderAdmin();document.querySelectorAll(".work").forEach(function(p){p.hidden=true});document.querySelectorAll(".act").forEach(function(x){x.setAttribute("aria-pressed","false")})}if(v==="setlist")renderSetlist();sync();scrollTo(0,0)}
 document.addEventListener("click",function(e){var b=e.target.closest("[data-go]");if(b)go(b.dataset.go)});
 function opts(id,key,all){var set={};songs.forEach(function(s){set[s[key]]=1});$(id).innerHTML='<option value="">'+all+'</option>'+Object.keys(set).sort().map(function(x){return"<option>"+esc(x)+"</option>"}).join("")}
@@ -318,12 +333,72 @@ else if(b=e.target.closest("[data-delpoll]")){var i=+b.dataset.delpoll,np={};pol
 function renderSongs(){var col=new Intl.Collator("cs"),list=songs.slice().sort(function(a,b){return col.compare(a.t,b.t)}),last="";
 $("#songList").innerHTML=list.map(function(s){var on=!!myVotes[s.id],L=s.t.charAt(0).toUpperCase(),h=L!==last?'<h3 style="margin:16px 0 0;color:var(--amber);font-size:26px">'+esc(L)+'</h3>':'';last=L;
 return h+'<div class="song"><div class="t" data-open="'+s.id+'"><b>'+esc(s.t)+'</b></div><button class="thumb" data-vote="'+s.id+'" aria-pressed="'+on+'" aria-label="Palec nahoru pro '+esc(s.t)+'">👍 '+votes(s)+'</button></div>'}).join("")}
-function chordsHtml(c){return c.split("\n").map(function(l){
-if(l.charAt(0)==="#")return'<div class="cl">'+esc(l.replace(/^#\s?/,""))+'</div>';
+var MT={ctx:null,id:null,w:null,timer:null,next:0,beat:0,bpm:100,beats:4,taps:[]};
+function mtCfg(id){var c=store.get("metro1",{})[id]||{};return{b:c.b||100,t:c.t||4}}
+function mtSave(id,b,t){var m=store.get("metro1",{});m[id]={b:b,t:t};store.set("metro1",m)}
+function mtDot(w,k){if(!w)return;[].forEach.call(w.querySelectorAll(".mtd i"),function(d,i){d.classList.toggle("on",i===k)})}
+function mtClick(time,accent){var c=MT.ctx,o=c.createOscillator(),g=c.createGain();o.type="square";o.frequency.value=accent?1500:1000;
+g.gain.setValueAtTime(accent?.35:.22,time);g.gain.exponentialRampToValueAtTime(.001,time+.05);o.connect(g);g.connect(c.destination);o.start(time);o.stop(time+.07)}
+function mtTick(){var c=MT.ctx;while(MT.next<c.currentTime+.12){mtClick(MT.next,MT.beat===0);
+(function(b,t){setTimeout(function(){if(MT.id!==null)mtDot(MT.w,b)},Math.max(0,(t-c.currentTime)*1000))})(MT.beat,MT.next);
+MT.next+=60/MT.bpm;MT.beat=(MT.beat+1)%MT.beats}}
+function mtStop(){clearInterval(MT.timer);MT.timer=null;var w=MT.w;MT.id=null;MT.w=null;
+if(w){var b=w.querySelector(".mtgo");if(b){b.textContent="\u25B6 Start";b.setAttribute("aria-pressed","false")}mtDot(w,-1)}}
+function mtStart(w){mtStop();var id=+w.dataset.song,c=mtCfg(id);
+try{MT.ctx=MT.ctx||new(window.AudioContext||window.webkitAudioContext)();if(MT.ctx.state==="suspended")MT.ctx.resume()}catch(e){toast("Zvuk se nepodařilo spustit");return}
+MT.id=id;MT.w=w;MT.bpm=c.b;MT.beats=c.t;MT.beat=0;MT.next=MT.ctx.currentTime+.08;mtTick();MT.timer=setInterval(mtTick,25);
+var b=w.querySelector(".mtgo");b.textContent="\u25A0 Stop";b.setAttribute("aria-pressed","true")}
+function mtSet(w,id,bpm){bpm=Math.max(30,Math.min(240,Math.round(bpm)||100));mtSave(id,bpm,mtCfg(id).t);w.querySelector(".mti").value=bpm;if(MT.id===id)MT.bpm=bpm}
+document.addEventListener("click",function(e){var b=e.target.closest("[data-mt]");if(!b)return;var w=b.closest(".tpw"),id=+w.dataset.song,a=b.dataset.mt,bpm=mtCfg(id).b;
+if(a==="go"){if(MT.id===id)mtStop();else mtStart(w);return}
+if(a==="tap"){var n=Date.now();if(MT.taps.length&&n-MT.taps[MT.taps.length-1]>2000)MT.taps=[];MT.taps.push(n);MT.taps=MT.taps.slice(-5);if(MT.taps.length<2)return;bpm=60000/((MT.taps[MT.taps.length-1]-MT.taps[0])/(MT.taps.length-1))}
+else bpm+=+a;
+mtSet(w,id,bpm)});
+document.addEventListener("change",function(e){var i=e.target.closest(".mti,.mts");if(!i)return;var w=i.closest(".tpw"),id=+w.dataset.song;
+if(i.classList.contains("mti"))mtSet(w,id,+i.value);
+else{var t=+i.value;mtSave(id,mtCfg(id).b,t);w.querySelector(".mtd").innerHTML=mtDotsHtml(t);if(MT.id===id){MT.beats=t;MT.beat=0}}});
+document.addEventListener("toggle",function(e){if(MT.w&&e.target.contains&&e.target.contains(MT.w)&&!e.target.open)mtStop()},true);
+var TN={C:0,D:2,E:4,F:5,G:7,A:9,B:10,H:11},TO=["C","C#","D","Eb","E","F","F#","G","Ab","A","B","H"];
+function trOne(t){var m=/^([A-H])(#|b|s(?!us))?(.*)$/.exec(t);if(!m)return null;var L=m[1],a=m[2]||"",rest=m[3];
+if(a==="s"&&L!=="E"&&L!=="A"){rest="s"+rest;a=""}
+return{i:TN[L]+(a==="#"?1:a?-1:0),rest:rest}}
+function trChord(ch,n){if(!n)return ch;var parts=ch.split("/"),out=[],k,r;if(parts.length>2)return ch;
+for(k=0;k<parts.length;k++){r=trOne(parts[k]);
+if(!r||(k===0?!/^(mi|m|maj|dim|aug|sus|add|dur|moll|\d|[#b+\-])*\.?$/.test(r.rest):(r.rest!==""&&r.rest!==".")))return ch;
+out.push(TO[((r.i+n)%12+12)%12]+r.rest)}return out.join("/")}
+function trLine(s,n){return n?s.replace(/[^\s,]+/g,function(t){return trChord(t,n)}):s}
+function tpGet(id){return+(store.get("transp1",{})[id]||0)}
+function tpLabel(n){return n===0?"0":(n>0?"+"+n:"\u2212"+(-n))}
+function mtDotsHtml(t){var h="",i;for(i=0;i<t;i++)h+="<i></i>";return h}
+function mtHtml(id){var c=mtCfg(id),on=MT.id===id;
+return'<div class="mt"><span class="tpl">Metronom</span>'
++'<button class="tpb" data-mt="-1" aria-label="Zpomalit o 1 úder za minutu">\u2212</button>'
++'<input class="mti" type="number" inputmode="numeric" min="30" max="240" value="'+c.b+'" aria-label="Tempo, údery za minutu">'
++'<button class="tpb" data-mt="1" aria-label="Zrychlit o 1 úder za minutu">+</button>'
++'<span class="tpl">BPM</span>'
++'<button class="tpb tpr" data-mt="tap" title="Klepej do rytmu">Tap</button>'
++'<select class="mts" aria-label="Takt"><option value="2"'+(c.t===2?' selected':'')+'>2/4</option><option value="3"'+(c.t===3?' selected':'')+'>3/4</option><option value="4"'+(c.t===4?' selected':'')+'>4/4</option></select>'
++'<button class="tpb tpr mtgo" data-mt="go" aria-pressed="'+on+'">'+(on?'\u25A0 Stop':'\u25B6 Start')+'</button>'
++'<span class="mtd" aria-hidden="true">'+mtDotsHtml(c.t)+'</span></div>'}
+function tpHtml(s){var n=tpGet(s.id),h='<div class="tpw" data-song="'+s.id+'">';
+if(s.c)h+='<div class="tp"><span class="tpl">Transpozice</span>'
++'<button class="tpb" data-tp="-1" aria-label="Transponovat o půltón níž">\u2212</button>'
++'<output class="tpv" title="půltónů">'+tpLabel(n)+'</output>'
++'<button class="tpb" data-tp="1" aria-label="Transponovat o půltón výš">+</button>'
++'<button class="tpb tpr" data-tp="0"'+(n?'':' disabled')+'>Původní</button></div>';
+h+=mtHtml(s.id)+'<div class="ch">'+(s.c?chordsHtml(s.c,n):"Akordy zatím nejsou nahrané.")+'</div></div>';return h}
+document.addEventListener("click",function(e){var b=e.target.closest("[data-tp]");if(!b)return;
+var w=b.closest(".tpw"),id=+w.dataset.song,s=sOf(id),T=store.get("transp1",{}),n=+(T[id]||0);
+n=b.dataset.tp==="0"?0:((n+ +b.dataset.tp+5)%12+12)%12-5;
+if(n)T[id]=n;else delete T[id];store.set("transp1",T);
+w.querySelector(".tpv").textContent=tpLabel(n);w.querySelector(".tpr").disabled=!n;
+w.querySelector(".ch").innerHTML=chordsHtml(s.c,n)});
+function chordsHtml(c,n){n=n||0;return c.split("\n").map(function(l){
+if(l.charAt(0)==="#")return'<div class="cl">'+esc(trLine(l.replace(/^#\s?/,""),n))+'</div>';
 if(!l.trim())return'<div class="br"></div>';
-var p=l.split(/(\[[^\]]+\])/),segs=[],o="",open=false,prev=" ",i;
+var p=l.split(/(\[[A-Ha-h][^\]\s]*\])/),segs=[],o="",open=false,prev=" ",i;
 if(p[0])segs.push(["",p[0]]);
-for(i=1;i<p.length;i+=2)segs.push([p[i].slice(1,-1),p[i+1]||""]);
+for(i=1;i<p.length;i+=2)segs.push([trChord(p[i].slice(1,-1),n),p[i+1]||""]);
 /* text se dělí na slova, aby se dlouhé řádky na mobilu zalomily; části jednoho slova (např. "pe[F]tlice") drží pohromadě */
 segs.forEach(function(s){(s[1].match(/\S+\s*|\s+/g)||[""]).forEach(function(t,k){
 if(!open||/\s$/.test(prev)){if(open)o+='</span>';o+='<span class="w">';open=true}
@@ -332,9 +407,9 @@ if(open)o+='</span>';
 return'<div class="ln">'+o+'</div>'}).join("")}
 document.addEventListener("click",function(e){
 var v=e.target.closest("[data-vote]");if(v){var id=v.dataset.vote;if(myVotes[id]){toast("Na tomto zařízení už máš hlas započítaný")}else{myVotes[id]=1;store.set("votes",myVotes);if(API_URL){shared.votes[id]=(shared.votes[id]||0)+1;api({action:"vote",dev:DEV,song:id}).then(sync)}toast("Hlas započítán")}renderSongs();return}
-var o=e.target.closest("[data-open]");if(o){var s=songs.filter(function(x){return x.id==o.dataset.open})[0],d=$("#songDetail");d.hidden=false;
-d.innerHTML='<h3>'+esc(s.t)+'</h3><div class="ch">'+(s.c?chordsHtml(s.c):"Akordy zatím nejsou nahrané.")+'</div><button class="btn ghost" id="closeD">Zavřít</button>';
-d.scrollIntoView({behavior:"smooth",block:"nearest"});$("#closeD").onclick=function(){d.hidden=true}}});
+var o=e.target.closest("[data-open]");if(o){var s=songs.filter(function(x){return x.id==o.dataset.open})[0],d=$("#songDetail");mtStop();d.hidden=false;
+d.innerHTML='<h3>'+esc(s.t)+'</h3>'+tpHtml(s)+'<button class="btn ghost" id="closeD">Zavřít</button>';
+d.scrollIntoView({behavior:"smooth",block:"nearest"});$("#closeD").onclick=function(){mtStop();d.hidden=true}}});
 
 function renderPolls(){$("#polls").innerHTML=polls.map(function(p,i){var tot=p.v.reduce(function(a,b){return a+b},0)+1,done=myPoll[i]!==undefined;
 return'<div style="margin-bottom:18px"><h3>'+esc(p.q)+'</h3>'+p.o.map(function(o,j){
@@ -381,12 +456,12 @@ store.set("setlistPrev",store.get("setlist2",[]));var ne={id:Date.now(),d:$("#eD
 $("#pSave").onclick=function(){var o=$("#pO").value.split("\n").map(function(x){return x.trim()}).filter(Boolean);
 if(!$("#pQ").value.trim()||o.length<2){toast("Doplňte otázku a aspoň dvě možnosti");return}
 polls.push({q:$("#pQ").value,o:o,v:o.map(function(){return 0})});store.set("polls4",polls);$("#pQ").value="";$("#pO").value="";renderPolls();renderAdmin();toast("Anketa je na úvodní stránce")};
-function renderSetlist(){var c=cur(),list=curSet(),my=store.get("setlistMy",null);
+function renderSetlist(){mtStop();var c=cur(),list=curSet(),my=store.get("setlistMy",null);
 if(my&&my.length){var inBase={},mine=[];list.forEach(function(s){inBase[s.id]=1});
 my.forEach(function(id){var s=sOf(id);if(s&&inBase[id]&&mine.indexOf(s)<0)mine.push(s)});
 list.forEach(function(s){if(mine.indexOf(s)<0)mine.push(s)});list=mine}
 $("#slPlace").textContent=c.p;$("#slWhen").textContent=c.d;
-$("#slList").innerHTML=list.map(function(s,i){return'<details class="sl" data-id="'+s.id+'"><summary>'+'<span class="grip" aria-label="Přetáhnout" title="Přetáhni na jiné místo">⠿</span>'+'<span class="n">'+(i+1)+'.</span><span>'+esc(s.t)+'</span></summary><div class="ch">'+(s.c?chordsHtml(s.c):"Akordy zatím nejsou nahrané.")+'</div></details>'}).join("")}
+$("#slList").innerHTML=list.map(function(s,i){return'<details class="sl" data-id="'+s.id+'"><summary>'+'<span class="grip" aria-label="Přetáhnout" title="Přetáhni na jiné místo">⠿</span>'+'<span class="n">'+(i+1)+'.</span><span>'+esc(s.t)+'</span></summary>'+tpHtml(s)+'</details>'}).join("")}
 var slDrag=null,SL=$("#slList");
 SL.addEventListener("pointerdown",function(e){var h=e.target.closest(".grip");if(!h)return;[].forEach.call(SL.children,function(d){d.open=false});slDrag=h.closest(".sl");slDrag.classList.add("lift");SL.setPointerCapture(e.pointerId);e.preventDefault()});
 SL.addEventListener("pointermove",function(e){if(!slDrag)return;var rows=[].slice.call(SL.children).filter(function(r){return r!==slDrag});
