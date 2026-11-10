@@ -3,6 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<script>var GATE_HASH="59ab594d8a10679bf92f665d8ce87306fbd20af1a1d0bf6787a68b6814464643";try{if(localStorage.getItem("gate1")!==GATE_HASH)document.documentElement.classList.add("locked")}catch(e){document.documentElement.classList.add("locked")}</script>
 <script>try{var t=localStorage.getItem("theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
 <title>Zpívaná</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=Source+Serif+4:wght@400;600&display=swap">
@@ -87,7 +89,30 @@ ol.set{padding-left:24px}ol.set li{padding:6px 0;border-bottom:1px solid var(--l
 .mtd{display:inline-flex;gap:6px;margin-left:4px}
 .mtd i{display:block;width:14px;height:14px;border-radius:50%;background:var(--line)}
 .mtd i.on{background:var(--amber)}.mtd i:first-child.on{background:var(--chord)}
-@media print{.tp,.mt{display:none}}
+.plrow{margin:0 0 12px}
+.plbtn{background:var(--amber);color:#201400;border:0;border-radius:10px;min-height:44px;padding:0 18px;font:800 16px "Bricolage Grotesque",system-ui,sans-serif;cursor:pointer}
+.plbtn:hover{filter:brightness(1.08)}
+#play{position:fixed;inset:0;z-index:100;background:rgba(0,0,0,.86)}#play[hidden]{display:none}
+.pl-panel{position:absolute;top:calc(env(safe-area-inset-top,0px) + 8px);bottom:calc(env(safe-area-inset-bottom,0px) + 8px);left:8px;right:8px;max-width:880px;margin:0 auto;background:var(--bg);color:var(--ink);border-radius:16px;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 10px 40px rgba(0,0,0,.5)}
+.pl-head{display:flex;align-items:baseline;gap:10px;padding:12px 16px 8px;border-bottom:1px solid var(--line)}
+.pl-head h2{margin:0;font-size:24px;line-height:1.15}#plNum{color:var(--amber);font:800 20px "Bricolage Grotesque",system-ui,sans-serif}
+#plStat{margin-left:auto;text-align:right;font:500 13px "Bricolage Grotesque",system-ui,sans-serif;color:var(--mut)}
+.pl-body{flex:1;overflow-y:auto;padding:0 8px;overscroll-behavior:contain;outline:0}
+.pl-body .ch{background:transparent;padding:14px 8px;font-size:21px}
+.pl-body .ch .sg span{font-size:21px}.pl-body .ch .sg b,.pl-body .ch .cl{font-size:20px}
+.pl-pad{height:60vh}
+.pl-bar{display:flex;gap:8px;padding:10px;border-top:1px solid var(--line);background:var(--surf)}
+.pl-bar button{flex:1;min-height:54px;font-size:16px;line-height:1.15;padding:8px 6px}.pl-bar button:disabled{opacity:.4;cursor:default}
+@media(max-width:620px){.pl-body .ch{font-size:19px}.pl-body .ch .sg span{font-size:19px}.pl-body .ch .sg b,.pl-body .ch .cl{font-size:18px}.pl-head h2{font-size:20px}.pl-bar{gap:6px;padding:8px}}
+#gate{display:none;position:fixed;inset:0;z-index:200;align-items:center;justify-content:center;padding:16px;background:var(--bg)}
+html.locked #gate{display:flex}
+html.locked body>*:not(#gate):not(script){display:none!important}
+.gbox{width:100%;max-width:380px;background:var(--surf);border:1px solid var(--line);border-radius:16px;padding:24px}
+.gbox h1{margin:0 0 6px;font-size:40px}
+.gbox p{margin:0 0 12px;color:var(--mut)}
+.gbox button{width:100%;margin-top:14px;min-height:48px;font-size:17px}
+#gErr{min-height:1.4em;margin-top:8px;color:var(--chord);font-weight:600}
+@media print{.tp,.mt,.plrow,#play,#gate{display:none!important}}
 .sl .grip{cursor:grab;color:var(--mut);font-size:26px;line-height:1;padding:8px 10px;margin:-8px -6px -8px -10px;touch-action:none;user-select:none;-webkit-user-select:none;align-self:center}
 .sl.lift{box-shadow:0 8px 24px rgba(0,0,0,.28);background:var(--amberSoft);border-radius:12px;cursor:grabbing}
 .actions{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:14px 0}
@@ -115,6 +140,11 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;ba
 </style>
 </head>
 <body>
+<div id="gate"><form class="gbox" id="gForm" autocomplete="off">
+<h1>Zpívaná</h1><p>Tohle není veřejný web. Zadej heslo.</p>
+<label for="gPass">Heslo</label><input type="password" id="gPass" autocomplete="current-password">
+<button class="btn" type="submit">Vstoupit</button><div id="gErr" role="alert"></div>
+</form></div>
 <header><div class="bar">
 <button class="logo" data-go="home">Zpívaná</button>
 <nav><button data-go="home">Úvod</button><button data-go="setlist">Setlist</button><button data-go="admin">Admin</button></nav>
@@ -238,6 +268,12 @@ body::before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;ba
 
 </section>
 </main>
+<div id="play" hidden role="dialog" aria-modal="true" aria-label="Režim hraní">
+<div class="pl-panel">
+<div class="pl-head"><span id="plNum"></span><h2 id="plTitle"></h2><span id="plStat"></span></div>
+<div class="pl-body" id="plBody" tabindex="0"><div class="ch" id="plCh"></div><div class="pl-pad"></div></div>
+<div class="pl-bar"><button class="btn ghost" id="plExit">Opustit režim hraní</button><button class="btn" id="plPrev">◀ Předchozí</button><button class="btn" id="plNext">Další ▶</button></div>
+</div></div>
 <div class="toast" id="toast" role="status"></div>
 
 <script>
@@ -267,19 +303,16 @@ var songs=[
 {id:21,t:"Miluju a maluju",a:"",v:0,c:"[Emi]Dejte mi [Hmi]malíři [C]barvy všech [D]druhů\n[Emi]Já budu [Hmi]do mraků [C]malovat [D]duhu\n[Emi]Řekněte básnici [Hmi]jak se verš skládá\n[C]Ona mne ona mne [C]asi [D]má ráda.\n\nJá [C]nejsem ani Leonardo ani Michelangelo\n[D]paletu mám amatérsky chudou\n[Ami]ale když mne paní můza políbila na čelo\n[D]Rozhod jsem se skoncovati s [G]nudou\n\nR: [C]Samým [F]blahem, [C]jedním [F]tahem\n   [C]srdce z [D]lásky [F]malu[G]ju\n   [C]Proto[F]že já, [C]proto[F]že já,\n   [C]proto[D]že já [F]milu[G]ju\n   A [C]maluju a [F]miluju, a [C]miluju a [F]maluju\n   a [C]miluju a [F]maluju a [C]miluju a [F]maluju.\n\nJá [C]neměl nikdy nadání mě nehýčkali uměny\n[D]Z kreslení jsem vždycky míval pětky.\n[Ami]Ale dneska vlastní duší kreslím fresky na stěny\n[D]fagule mi slouží místo [G]štětky.\n\nR: [C]Samým [F]blahem, [C]jedním [F]tahem\n   [C]srdce z [D]lásky [F]malu[G]ju\n   [C]Proto[F]že já, [C]proto[F]že já,\n   [C]proto[D]že já [F]milu[G]ju\n   A [C]maluju a [F]miluju, a [C]miluju a [F]maluju\n   a [C]miluju a [F]maluju a [C]miluju a [F]maluju."},
 {id:26,t:"Anděl",a:"",v:0,c:"# D, A7\n\n1. [D]Z rozmláce[Hm]ného kostela [D]v krabici [A7]s kusem mýdla,\n   [D]přinesl [Hm]jsem si anděla, [D]poláma[A7]li mu kří[D]dla.\n   [D]Díval se [Hm]na mě oddaně, [D]já měl [A7]jsem trochu trému,\n   [D]tak vtiskl [Hm]jsem mu do dlaně, [D]lahvičku [A7]od parfé[D]mu.\n\nRef: [D]A proto [Hm]prosím věř mi, [D]chtěl jsem ho [A7]žádat,\n     [D]aby mi [Hm]mezi dveřmi, [D]pomohl [A7]hádat,\n     [D]co mě če[Hm]ká – [A7]a nemi[D]neee,\n     [D]co mě če[Hm]ká – [A7]a nemi[D]ne.[A7]\n\n2. [D]Pak hlída[Hm]li jsme oblohu, [D]pozoru[A7]jíce ptáky,\n   [D]debatu[Hm]jící o Bohu [D]a hra[A7]ní na vojá[D]ky.\n   [D]Do tváře [Hm]jsem mu neviděl, [D]pokou[A7]šel si ji schovat,\n   [D]to asi [Hm]ptákům záviděl, [D]že mo[A7]hou poleto[D]vat.\n\nRef: [D]A proto [Hm]prosím věř mi, [D]chtěl jsem ho [A7]žádat,\n     [D]aby mi [Hm]mezi dveřmi, [D]pomohl [A7]hádat,\n     [D]co mě če[Hm]ká – [A7]a nemi[D]neee,\n     [D]co mě če[Hm]ká – [A7]a nemi[D]ne.[A7]\n\n3. [D]Když novin[Hm]ky mi sděloval, [D]u okna [A7]do ložnice,\n   [D]já křídla [Hm]jsem mu ukoval [D]z mosazný [A7]nábojni[D]ce.\n   [D]A tak jsem [Hm]pozbyl anděla, [D]on oknem [A7]odletěl mi,\n   [D]však přítel [Hm]prý mi udělá, [D]nového [A7]z mojí hel[D]my.\n\nRef: [D]A proto [Hm]prosím věř mi, [D]chtěl jsem ho [A7]žádat,\n     [D]aby mi [Hm]mezi dveřmi, [D]pomohl [A7]hádat,\n     [D]co mě če[Hm]ká – [A7]a nemi[D]neee,\n     [D]co mě če[Hm]ká [G]– [A]a nemi[D]ne.\n\n# Hm, G, A, D"},
 {id:29,t:"Mezi horami",a:"",v:0,c:"# Gm, F, Gm, F, Gm\n\n[:  [Gm]Mezi horami, lipka zelená. :]\n[:  [B]Zabili Janka, [F]Janíčka, [Gm]Janka, miesto [F]jele[Gm]ňa. :]\n\n[:  [Gm]Keď ho zabili, zamordovali. :]\n[:  [B]Na jeho hrobě, [F]na jeho [Gm]hrobě, kříž po[F]stavi[Gm]li. :]\n\n[:  [Gm]Ej křížu, křížu, ukřižovaný. :]\n[:  [B]Zde leží Janík, [F]Janíček, [Gm]Janík, zamor[F]dova[Gm]ný. :]\n\n# G, F, G, F, G,\n# Gm, F, Gm, F, Gm\n\n[:  [Gm]Tu šla Anička, plakat Janíčka. :]\n[:  [B]Hned na hrob padla [F]a viac nev[Gm]stala, dobrá [F]Anič[Gm]ka. :]\n\n# Gm, F, Gm, F, Gm, F, Gm, F, Gm"},
-{id:31,t:"Bláznova ukolébavka",a:"",v:0,c:""},
-{id:22,t:"Podvod",a:"",v:0,c:""},
-{id:23,t:"Franky Dlouhán",a:"",v:0,c:""},
-{id:24,t:"Valčíček",a:"",v:0,c:""},
-{id:25,t:"Co jste hasiči",a:"",v:0,c:""},
-{id:27,t:"Hudskonský šífy",a:"",v:0,c:""},
-{id:28,t:"Pověste ho verš",a:"",v:0,c:""},
-{id:30,t:"Buráky",a:"",v:0,c:""},
-{id:32,t:"Proklínám",a:"",v:0,c:""},
-{id:33,t:"Wonderwall",a:"",v:0,c:""},
-{id:34,t:"Kometa",a:"",v:0,c:""},
-{id:35,t:"Báječná ženská",a:"",v:0,c:""},
-{id:36,t:"Nad stádem koní",a:"",v:0,c:""}];
+{id:31,t:"Bláznova ukolébavka",a:"",v:0,c:"1. [D]Máš, má ovečko, [A]dávno spát, [G]už píseň ptáků [D]končí,\n   kvůli nám přestal [A]i vítr vát, [G]jen můra zírá [D]zvenčí,\n   [A]já znám její zášť, [G]tak vyhledej skrýš,\n   [A]zas má bílej plášť [G]a v okně [A]je mříž.\n\nR: [D]Máš, má ovečko, [A]dávno spát,\n   [G]a můžeš hrát, ty mě [E]můžeš hrát,\n   vždyť [D]přijdou se [G]ptát, zítra zas [D]přijdou se [G]ptát,\n   jestli ty v [D]mých předsta[A]vách už [D]mizíš.\n\n2. [D]Máš, má ovečko, [A]dávno spát, [G]už máme půlnoc [D]temnou,\n   zítra budou nám [A]bláznům lát, [G]že ráda snídáš [D]se mnou,\n   [A]proč měl bych jim lhát, [G]že jsem tady sám,\n   [A]když tebe mám rád, [G]když tebe [A]tu mám.\n\nR: [D]Máš, má ovečko, [A]dávno spát,\n   [G]a můžeš hrát, ty mě [E]můžeš hrát,\n   vždyť [D]přijdou se [G]ptát, zítra zas [D]přijdou se [G]ptát,\n   jestli ty v [D]mých předsta[A]vách už [D]mizíš."},
+{id:22,t:"Podvod",a:"",v:0,c:"1. [Emi]Na dlani jednu z tvých řas, do tmy se [Ami]koukám,\n   [D]hraju si písničky tvý, co jsem ti [G]psal,\n   je skoro [Ami]půlnoc a z kostela [Ami/C]zvon mi noc připo[Emi]miná,\n   půjdu se [Ami]mejt a pozhasínám, co bude [H7]dál?\n\n2. [Emi]Pod polštář dopisů pár, co poslalas, [Ami]dávám,\n   [D]píšeš, že ráda mě máš a trápí tě [G]stesk,\n   je skoro [Ami]půlnoc a z kostela [Ami/C]zvon mi noc připo[Emi]miná,\n   půjdu se [Ami]mejt a pozhasínám, co bude [H7]dál?\n\nR: Chtěl jsem to [Ami]ráno, kdy naposled snídal jsem s tebou,\n   ti [Emi]říct, že už ti nezavolám,\n   pro jednu pitomou [Ami]holku, pro pár nocí [D]touhy\n   podved jsem [G]všechno, o čem doma si [H7]sníš,\n   teď je mi to [Emi]líto[Emi].    [Ami]\n\n3. [Emi]Kolikrát člověk může mít rád tak opravdu z [Ami]lásky,\n   [D]dvakrát či třikrát – to ne, i jednou je [G]dost,\n   je skoro [Ami]půlnoc a z kostela [Ami/C]zvon mi noc připo[Emi]miná,\n   půjdu se [Ami]mejt a pozhasínám, co bude [H7]dál?\n\nR: Chtěl jsem to [Ami]ráno, kdy naposled snídal jsem s tebou,\n   ti [Emi]říct, že už ti nezavolám,\n   pro jednu pitomou [Ami]holku, pro pár nocí [D]touhy\n   podved jsem [G]všechno, o čem doma si [H7]sníš,\n   teď je mi to [Emi]líto[Emi].    [Ami]\n\nR: Chtěl jsem to [Ami]ráno, kdy naposled snídal jsem s tebou,\n   ti [Emi]říct, že už ti nezavolám,\n   pro jednu pitomou [Ami]holku, pro pár nocí [D]touhy\n   podved jsem [G]všechno, o čem doma si [H7]sníš,\n   teď je mi to [Emi]líto[Emi].    [Ami]"},
+{id:23,t:"Franky Dlouhán",a:"",v:0,c:"1. Kolik je [C]smutného, když [F]mraky černé [C]jdou,\n   lidem nad hla[G]vou, [F]smutnou dála[C]vou.\n   [C]Já slyšel příběh, který [F]velkou pravdu [C]měl,\n   za čas odle[G]těl, [F]každý zapom[C]něl.\n\nRef: Měl kapsu [G]prázdnou Frankie Dlouhán,\n     po Státech [F]toulal se jen [C]sám,\n     a že byl vese[F]lej, tak [C]každej měl ho [G]rád. [G7]\n     Tam ruce k [F]dílu mlčky přiloží a [C]zase jede [Ami]dál,\n     a [F]každej, kdo s ním [G]chvilku byl,\n     tak [F]dlouho [G]se pak [C]smál.\n\n2. Tam, kde byl [C]pláč, tam Frankie [F]hezkou píseň [C]měl,\n   slzy neměl [G]rád, [F]chtěl se jenom [C]smát.\n   [C]A když pak večer ranče [F]tiše usí[C]naj,\n   Frankův zpěv jde [G]dál, [F]nocí s písní [C]dál.\n\nRef: Měl kapsu [G]prázdnou Frankie Dlouhán,\n     po Státech [F]toulal se jen [C]sám,\n     a že byl vese[F]lej, tak [C]každej měl ho [G]rád. [G7]\n     Tam ruce k [F]dílu mlčky přiloží a [C]zase jede [Ami]dál,\n     a [F]každej, kdo s ním [G]chvilku byl,\n     tak [F]dlouho [G]se pak [C]smál.\n\n3. Tak Frankie[C]ho vám jednou [F]našli, přestal [C]žít,\n   jeho srdce [G]spí, [F]tiše, smutně [C]spí.\n   Bůhví jak, [C]za co, tenhle [F]smíšek konec [C]měl,\n   farář píseň [G]pěl, [F]umíráček [C]zněl.\n\nRef: Měl kapsu [G]prázdnou Frankie Dlouhán,\n     po Státech [F]toulal se jen [C]sám,\n     a že byl vese[F]lej, tak [C]každej měl ho [G]rád. [G7]\n     Tam ruce k [F]dílu mlčky přiloží a [C]zase jede [Ami]dál,\n     a [F]každej, kdo s ním [G]chvilku byl,\n     tak [F]dlouho [G]se pak [C]smál."},
+{id:24,t:"Valčíček",a:"",v:0,c:"R: Tuhle [A]písničku chtěl bych ti, [E7]lásko, dát,\n   ať ti každej den připomí[A]ná\n   [: toho, kdo je tvůj, [A7]čí ty jsi [D]a kdo má [A]rád,\n   ať ti každej den [E7]připomí[A]ná :]\n\n1. [A]Kluka jako ty hledám [E7]už spoustu let,\n   takovou trošku trhlý mý [A]já.\n   [A7]Dej mi ruku, pojď, [D]půjdeme šlapat náš [A]svět,\n   i když [E7]obrovskou práci to [A]dá.\n\nR: Tuhle [A]písničku chtěl bych ti, [E7]lásko, dát,\n   ať ti každej den připomí[A]ná\n   [: toho, kdo je tvůj, [A7]čí ty jsi [D]a kdo má [A]rád,\n   ať ti každej den [E7]připomí[A]ná :]\n\n2. [A]Fakt mi nevadí, že nos jak [E7]bambulku máš,\n   ani já nejsem žádný [A]ideál,\n   [A7]hlavně co uvnitř [D]nosíš a co ukrý[A]váš,\n   to je [E7]pouto, co vede nás [A]dál.\n\nR: Tuhle [A]písničku chtěl bych ti, [E7]lásko, dát,\n   ať ti každej den připomí[A]ná\n   [: toho, kdo je tvůj, [A7]čí ty jsi [D]a kdo má [A]rád,\n   ať ti každej den [E7]připomí[A]ná :]"},
+{id:25,t:"Co jste hasiči",a:"",v:0,c:"1. [C]Co jste [F]hasi[C]či, co jste děla[G7]li,\n   [G7]že jste nám ten pivo, [F]pivo pivovárek [C]shořet [G7]necha[C]li.\n   [G7]Že jste nám ten pivo, [F]pivo pivovárek [C]shořet [G7]necha[C]li.\n\n2. [C]Shořet [F]necha[C]li, i tu hospo[G7]du,\n   [G7]my staří mazáci, [F]staří ulejváci, [C]máme [G7]pít vo[C]du.\n   [G7]My staří mazáci, [F]staří ulejváci, [C]máme [G7]pít vo[C]du.\n\n3. [C]Vodu ne[F]pi[C]jem, my pijeme [G7]rum,\n  ([G7]vodu pijou žáby, [F]víno starý báby, [C]my pi[G7]jeme [C]rum\n  ([G7]Vodu pijou žáby, [F]víno starý báby, [C]my pi[G7]jeme [C]rum.)\n\n4. [C]Za pár [F]za čty[C]ři, už tu nebu[G7]dem,\n   [G7]už vás milí páni, [F]páni lampasáci, [C]zdravit [G7]nebu[C]dem.\n   [G7]Už vás milí páni, [F]páni lampasáci, [C]zdravit [G7]nebu[C]dem."},
+{id:27,t:"Hudsonský šífy",a:"",v:0,c:"1. [Am]Ten, kdo nezná hukot vody lopat[C]kama vířený,\n   jako já, jó [G]jako [Am]já,\n   kdo Hudsonský slapy nezná sírou [G]pekla sířený,\n   ať se [Am]na Hudsonský [G]šífy najmout [Am]dá, [G]jo-ho-[Am]ho.\n\n2. [Am]Ten, kdo nepřekládal uhlí, šíf když [C]na mělčinu vjel,\n   málo zná, [G]málo [Am]zná,\n   ten, kdo neměl tělo ztuhlý, až se [G]nočním chladem chvěl,\n   ať se [Am]na Hudsonský [G]šífy najmout [Am]dá, [G]jo-ho-[Am]ho.\n\nRef: [F]Ahoj, páru tam [Am]hoď, ať [G]do pekla se dříve dohra[Am]bem,\n   [G]jo-ho-[Am]ho, [G]jo-ho-[Am]ho.\n\n3. [Am]Ten, kdo nezná noční zpěvy zaro[C]stenejch lodníků,\n   jako já, jó [G]jako [Am]já,\n   ten, kdo cejtí se bejt chlapem, umí [G]dělat rotyku,\n   ať se [Am]na Hudsonský [G]šífy najmout [Am]dá, [G]jo-ho-[Am]ho.\n\n4. [Am]Ten, kdo má na bradě mlíko, kdo se [C]rumem neopil,\n   málo zná, jó [G]málo [Am]zná,\n   kdo necejtil hrůzu z vody, kde se [G]málem utopil,\n   ať se [Am]na Hudsonský [G]šífy najmout [Am]dá, [G]jo-ho-[Am]ho.\n\nRef: [F]Ahoj, páru tam [Am]hoď, ať [G]do pekla se dříve dohra[Am]bem,\n   [G]jo-ho-[Am]ho, [G]jo-ho-[Am]ho.\n\n5. [Am]Kdo má roztrhaný boty, kdo má [C]pořád jenom hlad,\n   jako já, jó [G]jako [Am]já,\n   kdo chce celý noci čuchat pekel[G]nýho vohně smrad,\n   ať se [Am]na Hudsonský [G]šífy najmout [Am]dá, [G]jo-ho-[Am]ho.\n\n6. [Am]Kdo chce zhebnout třeba zejtra, komu [C]je to všechno fuk,\n   kdo je sám, jó [G]jako [Am]já,\n   kdo má srdce v správným místě, kdo [G]je prostě príma kluk,\n   ať se [Am]na Hudsonský [G]šífy najmout [Am]dá, [G]jo-ho-[Am]ho.\n\nRef: [F]Ahoj, páru tam [Am]hoď, ať [G]do pekla se dříve dohra[Am]bem,\n   [G]jo-ho-[Am]ho, [G]jo-ho-[Am]ho,\n   [G]jo-ho-[Am]ho, [G]jo-ho-[Am]ho."},
+{id:28,t:"Pověste ho vejš",a:"",v:0,c:"R1: Pověste [Emi]ho vejš, ať se houpá, pověste ho [G]vejš, ať má [D]dost,\n    pověste ho [Ami]vejš, ať se [Emi]houpá, [D]že tu byl nezvanej [Emi]host.\n\n1. Pově[Emi]ste ho že byl jinej že tu s ná[G]ma dejchal stejnej [D]vzduch\n   pově[Ami]ste ho, že byl [Emi]línej a tak [D]trochu dobro[Emi]druh.\n\n2. Pově[Emi]ste ho za El Paso, za Snídani v [G]trávě a Lodní [D]zvon,\n   za to, že [Ami]neoplýval [Emi]krásou,\n   že měl [C]country rád a že [H7]uměl smát [Emi]i vám.\n\nR2: Nad hlavou [G]mi slunce pá[D]lí, konec [Ami]můj nic neoddá[G]lí[D],\n   do mých snů [G]se dívám zdá[D]li\n   a do [Ami]uší mi stále zní ta[H7]hle píseň poslední.\n\n3. Pově[Emi]ste ho za tu banku, v který zru[G]inoval svůj [D]vklad,\n   za to, [Ami]že nikdy nevy[Emi]držel na [D]jednom místě [Emi]stát.\n\n# Emi, G, D, Ami, Emi, D, Emi\n\nR2: Nad hlavou [G]mi slunce pá[D]lí, konec [Ami]můj nic neoddá[G]lí[D],\n   do mých snů [G]se dívám zdá[D]li\n   a do [Ami]uší mi stále zní ta[H7]hle píseň poslední.\n\nR1: Pověste [Emi]ho vejš, ať se houpá, pověste ho [G]vejš, ať má [D]dost,\n    pověste ho [Ami]vejš, ať se [Emi]houpá, [D]že tu byl nezvanej [Emi]host.\n\n4. Pově[Emi]ste ho za tu jistou, který nespl[G]nil svůj [D]slib,\n   že byl zar[Ami]putilým optimis[Emi]tou, a tak [D]dělal spoustu [Emi]chyb\n\n5. Pově[Emi]ste ho, že se koukal a že [G]hodně jed a hodně [D]pil,\n   že dal [Ami]přednost jarním [Emi]loukám\n   a pak se [C]oženil a pak se [H7]usadil a [Emi]žil"},
+{id:30,t:"Buráky",a:"",v:0,c:"1. Když [G]Sever válčí s Jihem a [C]zem jde do vál[G]ky\n   a v polích místo bavlny teď [A]rostou bodlá[D]ky,\n   ve [G]stínu u silnice vidíš [C]z Jihu vojá[G]ky,\n   jak válejí se v trávě a [D]louskaj burá[G]ky.\n\nR: Hej [G]hou, hej hou, nač [C]chodit do vál[G]ky,\n   je lepší doma sedět a [A]louskat burá[D]ky,\n   hej [G]hou, hej hou, nač [C]chodit do vál[G]ky,\n   je lepší doma sedět a [D]louskat burá[G]ky.\n\n2. Plu[G]kovník je v sedle, volá:\"[C]Yankeeové [G]jdou!\",\n   a mužstvo v trávě leží, prej [A]dál už nemo[D]hou,\n   plu[G]kovník se otočí a [C]koukne do dál[G]ky,\n   vidí svou slavnou armádu, jak [D]louská burá[G]ky.\n\nR: Hej [G]hou, hej hou, nač [C]chodit do vál[G]ky,\n   je lepší doma sedět a [A]louskat burá[D]ky,\n   hej [G]hou, hej hou, nač [C]chodit do vál[G]ky,\n   je lepší doma sedět a [D]louskat burá[G]ky.\n\n3. Až [G]tahle válka skončí a my [C]budem zase [G]žít,\n   svý milenky a ženy pak [A]půjdem polí[D]bit,\n   Pak [G]zeptaj se tě:\"Hrdino, cos' [C]dělal za vál[G]ky?\"\n   \"Já flákal jsem se s kvérem a [D]louskal burá[G]ky.\"\n\nR: Hej [G]hou, hej hou, nač [C]chodit do vál[G]ky,\n   je lepší doma sedět a [A]louskat burá[D]ky,\n   hej [G]hou, hej hou, nač [C]chodit do vál[G]ky,\n   je lepší doma sedět a [D]louskat burá[G]ky."},
+{id:32,t:"Proklínám",a:"",v:0,c:"1. [Am]Prázdej byt je jako [F]past, kde [Dm]růže uvad[C]nou,[G]\n   [Am]potisící čtu [F]tvůj dopis [Dm]na rozlouče[G]nou,\n   [C]píšeš, že [Am]odcházíš, když [Dm]den se s nocí [C]stří[G]dá,\n   [Am]vodu z vína [F]udělá, kdo [Dm]dobře nehlídá.[G] [Gsus4] [G]\n\nRef: Píšeš: [C]Proklí[G]nám, [Am]ty tvoje [F]ústa proklí[C]nám,\n   tvoje [G]oči ledový, [Am]v [F]srdci jen sníh,\n   [C]sám a [G]sám, [Am]ať nikdy [F]úsvit nespa[C]tříš,\n   na ústa [G]mříž, oči oslep[Am]nou, ať [F]do smrti seš [C]sám.\n\n2. [Am]Tvoje oči jsou [F]jak stín a [Dm]tvář den, když se [C]stmí[G]vá,\n   [Am]stromy rostou [F]čím dál výš a [Dm]pak je čeká [G]pád,\n   [C]sám s hlavou [Am]skloněnou, všechny [Dm]lásky budou [C]zdá[G]ní,\n   [Am]potisící [F]čtu tvůj dopis [Dm]na rozlouče[G]nou.[Gsus4] [G]\n\nRef: Píšeš: [C]Proklí[G]nám, [Am]ty tvoje [F]ústa proklí[C]nám,\n   tvoje [G]oči ledový, [Am]v [F]srdci jen sníh,\n   [C]sám a [G]sám, [Am]ať nikdy [F]úsvit nespa[C]tříš,\n   na ústa [G]mříž, oči oslep[Am]nou, [F]zůstaneš sám,\n   [C]sám a [G]sám, [Am]ať nikdy [F]úsvit nespa[C]tříš,\n   na ústa [G]mříž, oči oslep[Am]nou, ať [F]do smrti seš [C]sám."},
+];
 var extra=store.get("extraSongs",[]);songs=songs.concat(extra);
 var myVotes=store.get("votes",{});
 var events=store.get("events4",[{id:1,d:"11. 11. od 18:00",p:"Šmeralka"}]),curId=store.get("curEv",1),tools=store.get("tools",{});
@@ -308,6 +341,10 @@ for(j=0;j<64;j++){var S1=ror(a[4],6)^ror(a[4],11)^ror(a[4],25),ch=(a[4]&a[5])^(~
 a=[(t1+t2)|0,a[0],a[1],a[2],(a[3]+t1)|0,a[4],a[5],a[6]]}
 for(j=0;j<8;j++)H[j]=(H[j]+a[j])|0}
 return H.map(function(x){return("00000000"+(x>>>0).toString(16)).slice(-8)}).join("")}
+$("#gForm").onsubmit=function(e){e.preventDefault();
+if(sha256("zpivana:"+$("#gPass").value)===GATE_HASH){try{localStorage.setItem("gate1",GATE_HASH)}catch(x){}$("#gPass").value="";$("#gErr").textContent="";document.documentElement.classList.remove("locked")}
+else{$("#gErr").textContent="Špatné heslo.";$("#gPass").value="";$("#gPass").focus()}};
+if(document.documentElement.classList.contains("locked"))$("#gPass").focus();
 var AUTH_HASH="007e211da10211151894b9442eeb3a41178dedff67bcc33b06d11c3fa61bc84b",authed=false;
 function isAuth(){if(authed)return true;try{return sessionStorage.getItem("adm")==="1"}catch(e){return false}}
 function login(){if(sha256($("#lUser").value.trim()+":"+$("#lPass").value)===AUTH_HASH){authed=true;try{sessionStorage.setItem("adm","1")}catch(e){}$("#lPass").value="";$("#lErr").textContent="";go("admin")}else{$("#lErr").textContent="Špatné jméno nebo heslo.";$("#lPass").value=""}}
@@ -380,7 +417,7 @@ return'<div class="mt"><span class="tpl">Metronom</span>'
 +'<select class="mts" aria-label="Takt"><option value="2"'+(c.t===2?' selected':'')+'>2/4</option><option value="3"'+(c.t===3?' selected':'')+'>3/4</option><option value="4"'+(c.t===4?' selected':'')+'>4/4</option></select>'
 +'<button class="tpb tpr mtgo" data-mt="go" aria-pressed="'+on+'">'+(on?'\u25A0 Stop':'\u25B6 Start')+'</button>'
 +'<span class="mtd" aria-hidden="true">'+mtDotsHtml(c.t)+'</span></div>'}
-function tpHtml(s){var n=tpGet(s.id),h='<div class="tpw" data-song="'+s.id+'">';
+function tpHtml(s){var n=tpGet(s.id),h='<div class="tpw" data-song="'+s.id+'"><div class="plrow"><button class="plbtn" data-play="'+s.id+'">\u25B6 Režim hraní</button></div>';
 if(s.c)h+='<div class="tp"><span class="tpl">Transpozice</span>'
 +'<button class="tpb" data-tp="-1" aria-label="Transponovat o půltón níž">\u2212</button>'
 +'<output class="tpv" title="půltónů">'+tpLabel(n)+'</output>'
@@ -456,12 +493,42 @@ store.set("setlistPrev",store.get("setlist2",[]));var ne={id:Date.now(),d:$("#eD
 $("#pSave").onclick=function(){var o=$("#pO").value.split("\n").map(function(x){return x.trim()}).filter(Boolean);
 if(!$("#pQ").value.trim()||o.length<2){toast("Doplňte otázku a aspoň dvě možnosti");return}
 polls.push({q:$("#pQ").value,o:o,v:o.map(function(){return 0})});store.set("polls4",polls);$("#pQ").value="";$("#pO").value="";renderPolls();renderAdmin();toast("Anketa je na úvodní stránce")};
-function renderSetlist(){mtStop();var c=cur(),list=curSet(),my=store.get("setlistMy",null);
+function slOrder(){var list=curSet(),my=store.get("setlistMy",null);
 if(my&&my.length){var inBase={},mine=[];list.forEach(function(s){inBase[s.id]=1});
 my.forEach(function(id){var s=sOf(id);if(s&&inBase[id]&&mine.indexOf(s)<0)mine.push(s)});
-list.forEach(function(s){if(mine.indexOf(s)<0)mine.push(s)});list=mine}
+list.forEach(function(s){if(mine.indexOf(s)<0)mine.push(s)});list=mine}return list}
+function renderSetlist(){mtStop();var c=cur(),list=slOrder();
 $("#slPlace").textContent=c.p;$("#slWhen").textContent=c.d;
 $("#slList").innerHTML=list.map(function(s,i){return'<details class="sl" data-id="'+s.id+'"><summary>'+'<span class="grip" aria-label="Přetáhnout" title="Přetáhni na jiné místo">⠿</span>'+'<span class="n">'+(i+1)+'.</span><span>'+esc(s.t)+'</span></summary>'+tpHtml(s)+'</details>'}).join("")}
+/* režim hraní: celoobrazovkový zpěvník; text se začne sám posouvat po PLAY_DELAY sekundách rychlostí PLAY_SPEED px/s */
+var PLAY_DELAY=30,PLAY_SPEED=14,PL={on:false,list:[],i:0,wait:0,paused:false,pos:0,last:0,raf:0,lock:null,from:null};
+function plStat(){var b=$("#plBody"),end=PL.wait<=0&&b.scrollTop+b.clientHeight>=b.scrollHeight-2,
+t=PL.paused?"Pozastaveno · klepnutím pokračuj":end?"Konec písničky":PL.wait>0?"Posun začne za "+Math.ceil(PL.wait)+" s":"Posouvá se · klepnutím pozastavíš",e=$("#plStat");
+if(e.textContent!==t)e.textContent=t}
+function plRender(){var s=PL.list[PL.i];$("#plNum").textContent=(PL.i+1)+"/"+PL.list.length;$("#plTitle").textContent=s.t;
+$("#plCh").innerHTML=s.c?chordsHtml(s.c,tpGet(s.id)):"Akordy zatím nejsou nahrané.";
+$("#plBody").scrollTop=0;PL.pos=0;PL.wait=PLAY_DELAY;PL.paused=false;
+$("#plPrev").disabled=PL.i===0;$("#plNext").disabled=PL.i===PL.list.length-1;plStat()}
+function plLoop(ts){if(!PL.on)return;var b=$("#plBody"),dt=PL.last?Math.min(.25,(ts-PL.last)/1000):0;PL.last=ts;
+if(!PL.paused){if(PL.wait>0)PL.wait-=dt;else{PL.pos=Math.min(b.scrollHeight-b.clientHeight,PL.pos+PLAY_SPEED*dt);b.scrollTop=PL.pos}}
+plStat();PL.raf=requestAnimationFrame(plLoop)}
+function plOpen(id,from){mtStop();var list=slOrder(),i=-1;list.forEach(function(s,k){if(s.id===id)i=k});if(i<0){list=[sOf(id)];i=0}
+PL.list=list;PL.i=i;PL.on=true;PL.from=from;PL.last=0;$("#play").hidden=false;document.body.style.overflow="hidden";plRender();
+try{if(navigator.wakeLock)navigator.wakeLock.request("screen").then(function(l){if(PL.on)PL.lock=l;else l.release()}).catch(function(){})}catch(e){}
+$("#plBody").focus({preventScroll:true});PL.raf=requestAnimationFrame(plLoop)}
+function plClose(){PL.on=false;cancelAnimationFrame(PL.raf);$("#play").hidden=true;document.body.style.overflow="";
+if(PL.lock){try{PL.lock.release()}catch(e){}PL.lock=null}
+var det=document.querySelector('.sl[data-id="'+PL.list[PL.i].id+'"]');
+if(det&&$("#setlist").classList.contains("on")){det.open=true;scrollTo(0,Math.max(0,det.getBoundingClientRect().top+scrollY-document.querySelector("header").offsetHeight-8))}
+else if(PL.from&&document.contains(PL.from))PL.from.focus()}
+function plStep(d){var n=PL.i+d;if(n>=0&&n<PL.list.length){PL.i=n;plRender()}}
+$("#plBody").addEventListener("scroll",function(){if(PL.on&&Math.abs(this.scrollTop-PL.pos)>3)PL.pos=this.scrollTop});
+document.addEventListener("click",function(e){var b=e.target.closest("[data-play]");if(b){plOpen(+b.dataset.play,b);return}
+if(!PL.on)return;
+if(e.target.closest("#plExit"))plClose();else if(e.target.closest("#plPrev"))plStep(-1);else if(e.target.closest("#plNext"))plStep(1);
+else if(e.target.closest("#plBody")){PL.paused=!PL.paused;plStat()}});
+document.addEventListener("keydown",function(e){if(!PL.on)return;
+if(e.key==="Escape")plClose();else if(e.key==="ArrowRight")plStep(1);else if(e.key==="ArrowLeft")plStep(-1);else if(e.key===" "&&e.target.id==="plBody"){e.preventDefault();PL.paused=!PL.paused;plStat()}});
 var slDrag=null,SL=$("#slList");
 SL.addEventListener("pointerdown",function(e){var h=e.target.closest(".grip");if(!h)return;[].forEach.call(SL.children,function(d){d.open=false});slDrag=h.closest(".sl");slDrag.classList.add("lift");SL.setPointerCapture(e.pointerId);e.preventDefault()});
 SL.addEventListener("pointermove",function(e){if(!slDrag)return;var rows=[].slice.call(SL.children).filter(function(r){return r!==slDrag});
